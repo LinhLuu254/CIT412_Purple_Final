@@ -7,9 +7,22 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit')
 
 //App initialization
 const app = express();
+
+// Passport initialization
+// Makes passport available throughout the app
+require('config/passport');
+
+//Configure the rate limit
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 //Connect to Mongo via mongoose
 mongoose.set('strictQuery', false);
