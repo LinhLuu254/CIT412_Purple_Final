@@ -23,7 +23,7 @@ const RegisterForm = () => {
     e.preventDefault();
     try {
       // Send registration data to server
-      const response = await fetch('localhost:8080/api/v1/users/register', {
+      const response = await fetch('http://localhost:8080/api/v1/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -48,7 +48,8 @@ const RegisterForm = () => {
       <div className="form-group">
           <label htmlFor="Name">Name</label>
           <input 
-            type="name" 
+            type="name"
+            name="name"
             className="form-control" 
             id="InputName" 
             aria-describedby="name" 
@@ -60,7 +61,8 @@ const RegisterForm = () => {
         <div className="form-group">
           <label htmlFor="email">Email address</label>
           <input 
-            type="email" 
+            type="email"
+            name="email"
             className="form-control" 
             id="InputEmail1" 
             aria-describedby="email" 
@@ -72,7 +74,8 @@ const RegisterForm = () => {
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input 
-            type="password" 
+            type="password"
+            name="password"
             className="form-control" 
             id="InputPassword" 
             placeholder="Password"
@@ -83,7 +86,8 @@ const RegisterForm = () => {
         <div className="form-group">
           <label htmlFor="phone">Phone</label>
           <input 
-            type="phone" 
+            type="phone"
+            name="phone"
             className="form-control" 
             id="InputPhone" 
             placeholder="Enter your phone number"
