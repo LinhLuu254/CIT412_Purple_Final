@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Header from '../Header/Header'
 
 const RegisterForm = () => {
   // State to hold form field values
@@ -45,9 +44,6 @@ const RegisterForm = () => {
 
   return (
     <div>
-      <div>
-        <Header />
-      </div>
       <div className='container-sm'>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
