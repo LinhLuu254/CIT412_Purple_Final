@@ -23,7 +23,7 @@ const RegisterForm = () => {
     e.preventDefault();
     try {
       // Send registration data to server
-      const response = await fetch('localhost:8080/api/v1/users/register', {
+      const response = await fetch('http://localhost:8080/api/v1/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
