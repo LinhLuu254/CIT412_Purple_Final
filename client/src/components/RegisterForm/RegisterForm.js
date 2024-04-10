@@ -43,61 +43,60 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className='container-sm'>
-      <form onSubmit={handleSubmit}>
-      <div className="form-group">
-          <label htmlFor="Name">Name</label>
-          <input 
-            type="name"
-            name="name"
-            className="form-control" 
-            id="InputName" 
-            aria-describedby="name" 
-            placeholder="Enter your full name" 
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email address</label>
-          <input 
-            type="email"
-            name="email"
-            className="form-control" 
-            id="InputEmail1" 
-            aria-describedby="email" 
-            placeholder="Enter email" 
-            value={formData.email}
-            onChange={handleChange} 
+    <div>
+      <div className='container-sm'>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="Name">Name</label>
+            <input
+              type="name"
+              className="form-control"
+              id="InputName"
+              aria-describedby="name"
+              placeholder="Enter your full name"
+              value={formData.name}
+              onChange={handleChange}
             />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input 
-            type="password"
-            name="password"
-            className="form-control" 
-            id="InputPassword" 
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange} 
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="phone">Phone</label>
-          <input 
-            type="phone"
-            name="phone"
-            className="form-control" 
-            id="InputPhone" 
-            placeholder="Enter your phone number"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </div>
-        <br></br>
-        <button type="submit" className="btn btn-primary">Register</button>
-      </form>
-  </div>
-)}
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email address</label>
+            <input
+              type="email"
+              className="form-control"
+              id="InputEmail1"
+              aria-describedby="email"
+              placeholder="Enter email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              className="form-control"
+              id="InputPassword"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="phone">Phone</label>
+            <input
+              type="phone"
+              className="form-control"
+              id="InputPhone"
+              placeholder="Enter your phone number"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </div>
+          <br></br>
+          <button type="submit" className="btn btn-primary">Register</button>
+        </form>
+      </div>
+    </div>
+  )
+}
 export default RegisterForm;
