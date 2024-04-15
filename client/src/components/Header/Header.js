@@ -1,13 +1,10 @@
-import '../Header/Header.css';
+import 'src/components/Header/Header.css';
 import { Navigate, Link as RouterLink } from 'react-router-dom';
-// import useToken from '../../hooks/useToken';
+import useToken from 'src/hooks/useToken';
 
 
 function Header() {
-
-    // const {token, setToken} = useToken();
-    const token = '';
-    const setToken = '';
+    const {token, setToken} = useToken();
 
     const handleLogout = () => {
         setToken(null);

@@ -1,5 +1,5 @@
-import "../Board/Board.css";
-import Header from "../../components/Header/Header";
+import "src/pages/Board/Board.css";
+import Header from "src/components/Header/Header";
 
 
 function Board() {
