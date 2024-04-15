@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
 const RegisterForm = () => {
+
+
   // State to hold form field values
   const [formData, setFormData] = useState({
     email: '',
@@ -23,7 +25,7 @@ const RegisterForm = () => {
     e.preventDefault();
     try {
       // Send registration data to server
-      const response = await fetch('localhost:8080/api/v1/users/register', {
+      const response = await fetch('http://localhost:8080/api/v1/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -51,7 +53,6 @@ const RegisterForm = () => {
             type="name" 
             className="form-control" 
             id="InputName" 
-            aria-describedby="name" 
             placeholder="Enter your full name" 
             value={formData.name}
             onChange={handleChange}
