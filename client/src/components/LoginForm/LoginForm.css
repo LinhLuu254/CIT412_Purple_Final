@@ -1,0 +1,21 @@
+
+.fas {
+    color: #709085;
+}
+
+form {
+    width: 23rem;
+}
+
+img {
+    object-fit: cover; 
+    object-position: left;
+}
+
+form > h3 {
+    
+    letter-spacing: 1px; 
+    font-size: 30px;
+    color: #48c096;
+    
+}

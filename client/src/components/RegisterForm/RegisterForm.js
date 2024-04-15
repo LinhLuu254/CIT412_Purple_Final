@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 const RegisterForm = () => {
 
-
   // State to hold form field values
   const [formData, setFormData] = useState({
     email: '',
@@ -53,6 +52,7 @@ const RegisterForm = () => {
             type="name" 
             className="form-control" 
             id="InputName" 
+            aria-describedby="name" 
             placeholder="Enter your full name" 
             value={formData.name}
             onChange={handleChange}
@@ -69,32 +69,33 @@ const RegisterForm = () => {
             value={formData.email}
             onChange={handleChange} 
             />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input 
-            type="password" 
-            className="form-control" 
-            id="InputPassword" 
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange} 
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="phone">Phone</label>
-          <input 
-            type="phone" 
-            className="form-control" 
-            id="InputPhone" 
-            placeholder="Enter your phone number"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </div>
-        <br></br>
-        <button type="submit" className="btn btn-primary">Register</button>
-      </form>
-  </div>
-)}
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              className="form-control"
+              id="InputPassword"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="phone">Phone</label>
+            <input
+              type="phone"
+              className="form-control"
+              id="InputPhone"
+              placeholder="Enter your phone number"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </div>
+          <br></br>
+          <button type="submit" className="btn btn-primary">Register</button>
+        </form>
+      </div>
+  )
+}
 export default RegisterForm;

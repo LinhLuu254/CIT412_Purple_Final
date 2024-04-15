@@ -1,13 +1,16 @@
-import "src/pages/Board/Board.css"
+import "../Board/Board.css";
+import Header from "../../components/Header/Header";
 
 
-
-function Board () {
-
-
+function Board() {
     return (
-        <div className="container-sm mx-auto p-3">
-            <h1>Welcome Team Purple, This is CIT412 Final Project Front-end</h1>
+        <div>
+            {/* <div>
+                <Header/>
+            </div> */}
+            <div className="container-sm mx-auto p-3">
+                <h1>Welcome Team Purple, This is CIT412 Final Project Front-end</h1>
+            </div>
         </div>
     )
 }
