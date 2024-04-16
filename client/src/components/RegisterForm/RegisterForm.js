@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const RegisterForm = () => {
+
   // State to hold form field values
   const [formData, setFormData] = useState({
     email: '',
@@ -43,31 +44,30 @@ const RegisterForm = () => {
   };
 
   return (
-    <div>
-      <div className='container-sm'>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="Name">Name</label>
-            <input
-              type="name"
-              className="form-control"
-              id="InputName"
-              aria-describedby="name"
-              placeholder="Enter your full name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email address</label>
-            <input
-              type="email"
-              className="form-control"
-              id="InputEmail1"
-              aria-describedby="email"
-              placeholder="Enter email"
-              value={formData.email}
-              onChange={handleChange}
+    <div className='container-sm'>
+      <form onSubmit={handleSubmit}>
+      <div className="form-group">
+          <label htmlFor="Name">Name</label>
+          <input 
+            type="name" 
+            className="form-control" 
+            id="InputName" 
+            aria-describedby="name" 
+            placeholder="Enter your full name" 
+            value={formData.name}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="email">Email address</label>
+          <input 
+            type="email" 
+            className="form-control" 
+            id="InputEmail1" 
+            aria-describedby="email" 
+            placeholder="Enter email" 
+            value={formData.email}
+            onChange={handleChange} 
             />
           </div>
           <div className="form-group">
@@ -96,7 +96,6 @@ const RegisterForm = () => {
           <button type="submit" className="btn btn-primary">Register</button>
         </form>
       </div>
-    </div>
   )
 }
 export default RegisterForm;

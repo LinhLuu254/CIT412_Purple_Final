@@ -9,10 +9,18 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Board />} />
-          <Route path='/profile' element={<ProfilePage/>}/>
-          <Route path='/register' element={<RegisterPage />} />
-          <Route path='/login' element={<LoginPage/>}/>
+          <Route path='/' element={<PageLayout />}>
+            <Route index element={<Board />} />
+          </Route>
+          <Route path='/profile' element={<PageLayout />}>
+            <Route index element={<ProfilePage />} />
+          </Route>
+          <Route path='/register' element={<PageLayout />}>
+            <Route index element={<RegisterPage  />} />
+          </Route>
+          <Route path='/login' element={<PageLayout />}>
+            <Route index element={<LoginPage  />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>
