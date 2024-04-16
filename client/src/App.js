@@ -2,7 +2,8 @@ import Board from 'src/pages/Board/Board';
 import RegisterPage from 'src/pages/RegisterPage/RegisterPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from 'src/pages/LoginPage/LoginPage';
-import ProfilePage from 'src/pages/Profile/Profile';
+import ProfilePage from 'src/pages/ProfilePage/ProfilePage';
+import PageLayout from 'src/components/PageLayout/PageLayout';
 
 function App() {
   return (

@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
-import useToken from 'src/hook/useToken';
-import useID from 'src/hook/useID';
+import useToken from 'src/hooks/useToken';
+import useID from 'src/hooks/useID';
 import { useState, useEffect, useContext} from "react";
 import axios from 'axios';
 // import { APIURLContext } from "src/contexts/APIURLContext";
