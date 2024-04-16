@@ -7,6 +7,7 @@
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@google-cloud/pubsub": "^4.3.3",
     "app-module-path": "^2.2.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "~1.4.4",

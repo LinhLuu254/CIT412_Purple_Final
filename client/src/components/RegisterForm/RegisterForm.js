@@ -50,6 +50,7 @@ const RegisterForm = () => {
           <label htmlFor="Name">Name</label>
           <input 
             type="name" 
+            name="name"
             className="form-control" 
             id="InputName" 
             aria-describedby="name" 
@@ -62,6 +63,7 @@ const RegisterForm = () => {
           <label htmlFor="email">Email address</label>
           <input 
             type="email" 
+            name="email"
             className="form-control" 
             id="InputEmail1" 
             aria-describedby="email" 
@@ -74,6 +76,7 @@ const RegisterForm = () => {
             <label htmlFor="password">Password</label>
             <input
               type="password"
+              name="password"
               className="form-control"
               id="InputPassword"
               placeholder="Password"
@@ -85,6 +88,7 @@ const RegisterForm = () => {
             <label htmlFor="phone">Phone</label>
             <input
               type="phone"
+              name="phone"
               className="form-control"
               id="InputPhone"
               placeholder="Enter your phone number"
