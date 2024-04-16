@@ -36,7 +36,7 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING, {
 //Routers
 const apiRouter = require('routes/api/v1');
 const usersRouter = require('routes/api/v1/users');
-const musicRouter = require('routes/api/v1/music');
+const booksRouter = require('routes/api/v1/books');
 
 //Middleware
 app.use(logger('dev'));
@@ -49,6 +49,6 @@ app.use(cors());
 //Add router to middleware
 app.use('/api/v1', apiRouter);
 app.use('/api/v1/users', usersRouter);
-app.use('/api/v1/music', musicRouter);
+app.use('/api/v1/books', booksRouter);
 
 module.exports = app;
