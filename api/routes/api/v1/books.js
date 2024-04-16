@@ -31,13 +31,16 @@ function createFilterRoutes(path, get=() => Book.find({})) {
             }
 
             if (field === 'id') field = '_id';
-            if (!Book.pathExists(field)) return res.status(400).send(`Invalid property: ${field}`);
+            if (!Book.pathExists(field) && !res.headersSent) return res.status(400).send(`Invalid property: ${field}`);
             fields[field] = negate ? 0 : 1;
         });
         if (res.headersSent) return;
 
         if (!fields._id) fields._id = 0;
-        if (fields.id) fields._id = 1;
+        if (fields.id) {
+            fields._id = 1;
+            delete fields.id;
+        }
         
         query.select(fields).then((books) => {
             res.json(books);
