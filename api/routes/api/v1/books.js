@@ -73,6 +73,9 @@ function findByRegex(regexArgs) {
             } else if (val.startsWith("in_")) {
                 const [min, max] = val.substring(3).split(':');
                 return Book.find({ [prop]: { $gte: min, $lte: max } });
+            } else if (val.startsWith("nin_")) {
+                const [min, max] = val.substring(4).split(':');
+                return Book.find({$or: [{[prop]: {$lt: min}}, {[prop]: {$gt: max}}]});
             } else {
                 return Book.find({ [prop]: val });
             }
@@ -81,6 +84,7 @@ function findByRegex(regexArgs) {
 }
 
 createFilterRoutes('all');
+// by-exact-prop needs to be defined before by-prop or by-prop will catch any by-exact-prop requests and cause an error
 createFilterRoutes('by-exact-:prop/:val', findByRegex({matchWhole: true}));
 createFilterRoutes('by-:prop/:val', findByRegex({caseInsensitive: true, accentInsensitive: true}));
 
