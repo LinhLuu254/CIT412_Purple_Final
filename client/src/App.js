@@ -1,5 +1,5 @@
-import Board from '../src/pages/Board/Board';
-import RegisterPage from '../src/pages/RegisterPage/RegisterPage';
+import Board from 'src/pages/Board/Board';
+import RegisterPage from 'src/pages/RegisterPage/RegisterPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage/LoginPage';
 import ProfilePage from './pages/Profile/Profile';

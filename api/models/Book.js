@@ -1,20 +1,18 @@
 const mongoose = require('mongoose');
+const { isValidURL } = require('lib/Regex');
 const Schema = mongoose.Schema;
 
+const importantWordOverrides = {
+    "big": true
+};
 function toTitleCase(str="") {
     const words = str.split(" ");
 
     return words.map((word, i) => {
         // Simple way to detect most minor words with few false positives
-        if (i !== 0 && word.length <= 3) return word.toLowerCase();
+        if (i !== 0 && !importantWordOverrides[word.toLowerCase()] && word.length <= 3) return word.toLowerCase();
         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     }).join(" ");
-}
-
-function pad(num, size) {
-    num = num.toString();
-    while (num.length < size) num = "0" + num;
-    return num;
 }
 
 const BookSchema = new Schema ({
@@ -23,7 +21,6 @@ const BookSchema = new Schema ({
         required: true,
 
         trim: true,
-        unique: true,
 
         get: toTitleCase,
         set: toTitleCase
@@ -90,7 +87,6 @@ const BookSchema = new Schema ({
 
         max: 9999999999999, // Makes sure the number is 13 digits or less
 
-        get: (v) => pad(v, 13),
         set: (v) => {
             if (typeof v === 'string') v = parseInt(v);
             if (typeof v === 'number') return v;
@@ -128,13 +124,29 @@ const BookSchema = new Schema ({
     thumbnail: {
         type: String,
 
-        // https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
-        match: /^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/
+        validate: {
+            validator: isValidURL,
+            message: (props) => `${props.value} is not a valid URL`
+        }
     },
 }, {
+    collection: "books",
+    id: false,
     toJSON: {getters: true, virtuals: true},
+    toObject: {getters: true, virtuals: true}
 });
 
+// Primary key is a combination of title, authors, and published_year
+BookSchema.index({title: 1, authors: 1, published_year: 1}, {unique: true});
+
 const BookModel = mongoose.model('Book', BookSchema);
+
+BookModel.pathExists = function(path) {
+    return BookModel.schema.paths[path] !== undefined;
+};
+
+BookModel.pathType = function(path) {
+    return BookModel.schema.paths[path]?.instance;
+};
 
 module.exports = BookModel;
