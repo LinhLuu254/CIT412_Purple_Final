@@ -13,6 +13,12 @@ router.get('/', async (req, res) => {
     res.json(users);
 });
 
+router.get("/user/:id", async (req, res) => {
+    const user = await User.findById(req.params.id);
+    res.json(user);
+});
+
+
 router.post('/register', passport.authenticate('register', {session: false}), async (req, res) => {
     // Creates a client; cache this for further use
     const pubSubClient = new PubSub();

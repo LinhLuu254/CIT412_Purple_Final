@@ -1,9 +1,9 @@
 import { APIURLContext } from "src/contexts/APIURLContext";
 import { useState, useContext } from "react";
 import { useNavigate, Navigate } from 'react-router-dom';
-import useToken from "src/hook/useToken";
+import useToken from "src/hooks/useToken";
 import axios from "axios";
-import useID from "src/hook/useID";
+import useID from "src/hooks/useID";
 
 
 export default function LoginForm() {
@@ -24,7 +24,7 @@ export default function LoginForm() {
     //Function that posts form data to the API
     async function loginUser(credentials) {
         try {
-            const res = await axios.post('http://localhost:8080/api/v1/users/login', credentials);
+            const res = await axios.post(apiURL + '/users/login', credentials);
             console.log(res.data);
             return res.data;
 
@@ -34,6 +34,7 @@ export default function LoginForm() {
         }
 
     };
+
 
     //Handler function for form field change
     const handleChange = (event) => {
@@ -70,7 +71,7 @@ export default function LoginForm() {
     }
 
     return (      
-        <div className="container-sm m-auto align-items-center" >
+        <div className="container-sm m-auto align-items-center mt-5" >
             <div className="row">
                 <div className="col-sm-4 text-black">
                     <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
@@ -105,13 +106,13 @@ export default function LoginForm() {
                                 <button className="btn btn-info btn-lg btn-block" type="submit" value="Log In">Login</button>
                             </div>
                             <p className="small mb-5 pb-lg-2"><a className="text-muted" href="#!">Forgot password?</a></p>
-                            <p>Don't have an account? <span onClick={() => navigate('/profile')} className="link-info">Register here</span></p>
+                            <p>Don't have an account? <a href="/register" className="link-info">Register here</a></p>
                         </form>
                     </div>
                 </div>
                 <div class="col-sm-6 px-0 d-none d-sm-block">
-                    <img src="./images/music.jpeg"
-                    alt="Login image" class="w-100 vh-98"/>
+                    <img src="./images/Book1.jpeg"
+                    alt="Book1" class="w-100 vh-98"/>
                 </div>
             </div>       
         </div>

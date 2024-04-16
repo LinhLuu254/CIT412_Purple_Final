@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { APIURLContext } from 'src/contexts/APIURLContext';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
+
+  const apiURL = useContext(APIURLContext);
+  const navigate = useNavigate();
 
   // State to hold form field values
   const [formData, setFormData] = useState({
@@ -24,7 +29,7 @@ const RegisterForm = () => {
     e.preventDefault();
     try {
       // Send registration data to server
-      const response = await fetch('http://localhost:8080/api/v1/users/register', {
+      const response = await fetch(apiURL + '/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -32,10 +37,14 @@ const RegisterForm = () => {
         body: JSON.stringify(formData)
       });
       if (response.ok) {
-        // Registration successful, redirect or display success message
+        // Registration successful, redirect and display success message
+        alert(`Registration successful`);
         console.log('Registration successful');
+        navigate('/login');
+
       } else {
-        // Registration failed, display error message
+        // Registration failed
+        alert(`Registration failed, check your input`);
         console.error('Registration failed');
       }
     } catch (error) {
@@ -44,20 +53,20 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className='container-sm'>
+    <div className='container-sm align-items-center m-3' id="register">
       <form onSubmit={handleSubmit}>
-      <div className="form-group">
-          <label htmlFor="Name">Name</label>
-          <input 
-            type="name" 
-            name="name"
-            className="form-control" 
-            id="InputName" 
-            aria-describedby="name" 
-            placeholder="Enter your full name" 
-            value={formData.name}
-            onChange={handleChange}
-          />
+        <div className="form-group">
+            <label htmlFor="Name">Name</label>
+            <input 
+              type="name" 
+              name="name"
+              className="form-control" 
+              id="InputName" 
+              aria-describedby="name" 
+              placeholder="Enter your full name" 
+              value={formData.name}
+              onChange={handleChange}
+            />
         </div>
         <div className="form-group">
           <label htmlFor="email">Email address</label>
@@ -71,35 +80,35 @@ const RegisterForm = () => {
             value={formData.email}
             onChange={handleChange} 
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              id="InputPassword"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phone">Phone</label>
-            <input
-              type="phone"
-              name="phone"
-              className="form-control"
-              id="InputPhone"
-              placeholder="Enter your phone number"
-              value={formData.phone}
-              onChange={handleChange}
-            />
-          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            className="form-control"
+            id="InputPassword"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="phone">Phone</label>
+          <input
+            type="phone"
+            name="phone"
+            className="form-control"
+            id="InputPhone"
+            placeholder="Enter your phone number"
+            value={formData.phone}
+            onChange={handleChange}
+          />
+        </div>
           <br></br>
           <button type="submit" className="btn btn-primary">Register</button>
-        </form>
-      </div>
+      </form>
+    </div>
   )
 }
 export default RegisterForm;

@@ -22,8 +22,12 @@ const UserSchema = new Schema ({
     password: {
         type: String,
         required: true
-    }
+    }, 
 
+    date: {
+        type: Date
+    }
+    
 }, {
     collection: 'users',
     toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
@@ -38,7 +42,6 @@ UserSchema.pre('save', async function(next){
     const hash = await bcrypt.hash(user.password, 10);
     user.password = hash;
     next();
-
 });
 
 // Create a helper function that uses bcrypt to check the plain text version 
@@ -47,7 +50,7 @@ UserSchema.methods.isValidPassword = async function (encryptedPassword) {
     const user = this;
     const compare = await bcrypt.compare(encryptedPassword, user.password);
     return compare;
-}
+};
 
 const UserModel = mongoose.model('User', UserSchema);
 

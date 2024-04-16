@@ -1,15 +1,17 @@
 import { Navigate } from 'react-router-dom';
-import useToken from 'src/hook/useToken';
-import useID from 'src/hook/useID';
+import useToken from 'src/hooks/useToken';
+import useID from 'src/hooks/useID';
 import { useState, useEffect, useContext} from "react";
 import axios from 'axios';
-// import { APIURLContext } from "src/contexts/APIURLContext";
+import { APIURLContext } from "src/contexts/APIURLContext";
 
 
 export default function ProfilePage() {
     const { token} = useToken();
 
     const {_id} = useID();
+
+    const apiURL = useContext(APIURLContext);
 
     const [user, setUser] = useState({});
 
@@ -18,7 +20,7 @@ export default function ProfilePage() {
     useEffect(() => {
         const loadUser = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/users/user/${_id}`);
+                const response = await axios.get(`${apiURL}/users/user/${_id}`);
                 setUser(response.data)
 
 
