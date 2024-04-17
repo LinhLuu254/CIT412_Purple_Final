@@ -19,10 +19,11 @@ router.get("/user/:id", async (req, res) => {
 });
 
 
-router.post('/register', passport.authenticate('register', {session: false}), async (req, res) => {
+router.post('/register', passport.authenticate('register', { session: false }), async (req, res) => {
+  
     // Creates a client; cache this for further use
     const pubSubClient = new PubSub();
-   
+
     // Extract user data from the request body
     const { email, name, phone } = req.body;
 
@@ -36,25 +37,27 @@ router.post('/register', passport.authenticate('register', {session: false}), as
         user_phone: phone
     });
 
-    // Create a data buffer to stream the message to the topic
-    const dataBuffer = Buffer.from(userData);
+    async function publishMessage(topicNameOrId, data) {
+        // Publishes the message as a string, e.g. "Hello, world!" or JSON.stringify(someObject)
+        const dataBuffer = Buffer.from(data);
+        
+        try {
+            const messageId = await pubSubClient
+            .topic(topicNameOrId)
+            .publishMessage({data: dataBuffer});
+            console.log(`Message ${messageId} published.`);
+        } catch (error) {
+            console.error(`Received error while publishing: ${error.message}`);
+            process.exitCode = 1;
+        }
+        }
 
-    try {
-        // Publish the message to the Pub/Sub topic
-        const messageId = await pubSubClient.topic(pubsub_topic).publishMessage({ data: dataBuffer });
-        console.log(`Message ID: ${messageId}`);
+    publishMessage(pubsub_topic, userData);
 
-        // Send a response to the client indicating successful registration along with the message ID
-        res.status(200).json({
-            message: 'Registration successful',
-            user: req.user,
-            messageId: messageId
-        });
-    } catch (error) {
-        // Handle errors if message publishing fails
-        console.error(`Error while publishing message: ${error.message}`);
-        res.status(500).json({ error: 'Error occurred during registration' });
-    }
+    res.status(200).json({
+        message: 'Registration successful',
+        user: req.user,
+    });
 });
 
 

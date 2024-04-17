@@ -91,4 +91,5 @@ createFilterRoutes('all');
 createFilterRoutes('by-exact-:prop/:val', findByRegex({matchWhole: true}));
 createFilterRoutes('by-:prop/:val', findByRegex({caseInsensitive: true, accentInsensitive: true}));
 
+
 module.exports = router;
