@@ -1,0 +1,31 @@
+#bookCard {
+    background: #f2f3ef;
+    border: 2px double #293444;
+    color: rgba(20, 31, 17, 0.8);
+    margin-bottom: 2rem;
+    width: 18rem;
+    margin: 5px;
+  }
+
+ 
+
+  .card-title{
+    color: #2d3322;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+  }
+
+  #title {
+    background-color: #e0faaf;
+  }
+
+p #link{
+    color: rgb(133, 89, 9);
+}
+
+#cardImage{
+    background-size: cover;
+   background-repeat: no-repeat;
+   background-position: center center;
+   height: 350px;
+}

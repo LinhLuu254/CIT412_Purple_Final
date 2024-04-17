@@ -119,5 +119,26 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
     }
 });
 
+//get all distince categories
+router.get('/categories', (req, res) => {
+    Book.distinct('categories')
+        .then(categories => {
+            res.json(categories);
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error retrieving categories');
+        });
+});
+
+//get all books of one category
+router.get('/categories/:category', async (req, res) => {
+    const category = req.params.category;
+    const regExpression = new RegExp(category, 'i')
+    const regexfilter = {"categories": {$regex: regExpression}};
+    const books = await Book.find(regexfilter);
+    res.json(books);
+
+});
 
 module.exports = router;
