@@ -5,16 +5,28 @@ import {useContext} from 'react';
 import { APIURLContext } from 'src/contexts/APIURLContext';
 import { nanoid } from "nanoid";
 import Books from "src/components/Book/Book";
+import { SearchBar } from "src/components/SearchBar/SearchBar";
 
 
 
 function Board() {
-
     const apiURL = useContext(APIURLContext);
 
     const [books, setBooks] = useState([]);
     const [loading, error, bookdata] = useBookFetcher(`${apiURL}/books/all/props/title,id,thumbnail,categories,average_rating`);
-   
+
+    function onSearchChange(text, type) {
+        if (bookdata) {
+            setBooks(bookdata.filter((book) => {
+                switch (type) {
+                    case "title":
+                        return book.title.toLowerCase().includes(text.toLowerCase());
+                }
+
+                return false;
+            }));
+        }
+    }
 
     useEffect(() => {
         setBooks(bookdata)
@@ -22,6 +34,8 @@ function Board() {
 
     return (
         <div className="container-sm mx-auto p-3">
+            <SearchBar onChange={onSearchChange} />
+
             <div className="row">
                 {
                     books.map((book) =>(
