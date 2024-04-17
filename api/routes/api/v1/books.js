@@ -4,7 +4,28 @@ const Book = require("models/Book");
 const { transformRegex } = require("lib/Regex");
 
 // Reduce repetitive code by batch-creating similar routes
-function createFilterRoutes(path, get=() => Book.find({})) {
+function createFilterRoutes(path, _get=() => Book.find({})) {
+    function get(req, res) {
+        const {
+            l = 10,
+            limit = l,
+
+            p = 0,
+            pg = p,
+            page = pg,
+
+            s = "null",
+            sort = s
+        } = req.query;
+
+        let result = _get(req, res);
+
+        if (s !== "null") result = result.sort({ [sort]: 1 });
+        if (limit !== "null") result = result.limit(parseInt(limit)).skip(parseInt(limit) * parseInt(page));
+        
+        return result;
+    }
+
     router.get(`/${path}`, (req, res) => {
         const query = get(req, res);
         if (res.headersSent) return;
@@ -69,54 +90,57 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
 
         a = "true",
         ai = a,
-        accent_insensitive = ai,
+        accent_insensitive = ai
     } = req.query;
 
     if (prop === 'id') prop = '_id';
     if (!Book.pathExists(prop)) return res.status(400).send(`Invalid property: ${prop}`);
     
+    let result;
     if (Book.pathType(prop) === "String") {
-        return Book.find({
+        result = Book.find({
             [prop]: transformRegex(val, {
                 caseInsensitive: case_insensitive === "true",
                 matchWhole: match_whole === "true",
                 accentInsensitive: accent_insensitive === "true"
             })
-        });
+        }).limit(parseInt(limit));
     } else if (Book.pathType(prop) === "Number") {
         if (val.startsWith(">=")) {
             val = val.substring(2);
             
             if (isNaN(val)) return res.status(400).send(`Invalid Number: ${val}`);
-            return Book.find({ [prop]: { $gte: val } });
+            result = Book.find({ [prop]: { $gte: val } });
         } else if (val.startsWith("<=")) {
             val = val.substring(2);
 
             if (isNaN(val)) return res.status(400).send(`Invalid Number: ${val}`);
-            return Book.find({ [prop]: { $lte: val } });
+            result = Book.find({ [prop]: { $lte: val } });
         } else if (val.startsWith('>')) {
             val = val.substring(1);
 
             if (isNaN(val)) return res.status(400).send(`Invalid Number: ${val}`);
-            return Book.find({ [prop]: { $gt: val } });
+            result = Book.find({ [prop]: { $gt: val } });
         } else if (val.startsWith('<')) {
             val = val.substring(1);
 
             if (isNaN(val)) return res.status(400).send(`Invalid Number: ${val}`);
-            return Book.find({ [prop]: { $lt: val } });
+            result = Book.find({ [prop]: { $lt: val } });
         } else if (val.startsWith("in_")) {
             const [min, max] = val.substring(3).split(':');
 
             if (isNaN(min)) return res.status(400).send(`Invalid Min Number: ${min}`);
             if (isNaN(max)) return res.status(400).send(`Invalid Max Number: ${max}`);
-            return Book.find({ [prop]: { $gte: min, $lte: max } });
+            result = Book.find({ [prop]: { $gte: min, $lte: max } });
         } else if (val.startsWith("nin_")) {
             const [min, max] = val.substring(4).split(':');
-            return Book.find({$or: [{[prop]: {$lt: min}}, {[prop]: {$gt: max}}]});
+            result = Book.find({$or: [{[prop]: {$lt: min}}, {[prop]: {$gt: max}}]});
         } else {
-            return Book.find({ [prop]: val });
+            result = Book.find({ [prop]: val });
         }
     }
+
+    return result.limit(parseInt(limit)).skip(parseInt(limit) * parseInt(page));
 });
 
 //get all distince categories
