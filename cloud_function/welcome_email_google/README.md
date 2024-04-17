@@ -13,6 +13,7 @@ gcloud functions deploy send_email_welcome \
 --no-gen2
 
 ```
+npm install dotenv mongodb @sendgrid/mail
 
 ```
 gcloud config set project cit412-purple-final
