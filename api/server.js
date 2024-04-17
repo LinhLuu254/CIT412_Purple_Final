@@ -48,6 +48,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile, {explorer: true}));
 app.use(cors());
+app.use(limiter);
 
 //Add router to middleware
 app.use('/api/v1', apiRouter);

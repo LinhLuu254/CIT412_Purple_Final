@@ -5,6 +5,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 require("models/User");
 const User = mongoose.model("User");
+const {PubSub} = require('@google-cloud/pubsub');
 
 
 router.get('/', async (req, res) => {
@@ -12,15 +13,53 @@ router.get('/', async (req, res) => {
     res.json(users);
 });
 
+router.get("/user/:id", async (req, res) => {
+    const user = await User.findById(req.params.id);
+    res.json(user);
+});
 
 
-router.post('/register', passport.authenticate('register', {session: false}), async (req, res) => {
-    res.status(200).json ({
-        message: 'Registration successful',
-        user: req.user
+router.post('/register', passport.authenticate('register', { session: false }), async (req, res) => {
+  
+    // Creates a client; cache this for further use
+    const pubSubClient = new PubSub();
+
+    // Extract user data from the request body
+    const { email, name, phone } = req.body;
+
+    // Set the Pub/Sub topic name
+    const pubsub_topic = "email_signup";
+
+    // Prepare user data as a JSON object
+    const userData = JSON.stringify({
+        email_address: email,
+        user_name: name,
+        user_phone: phone
     });
 
+    async function publishMessage(topicNameOrId, data) {
+        // Publishes the message as a string, e.g. "Hello, world!" or JSON.stringify(someObject)
+        const dataBuffer = Buffer.from(data);
+        
+        try {
+            const messageId = await pubSubClient
+            .topic(topicNameOrId)
+            .publishMessage({data: dataBuffer});
+            console.log(`Message ${messageId} published.`);
+        } catch (error) {
+            console.error(`Received error while publishing: ${error.message}`);
+            process.exitCode = 1;
+        }
+        }
+
+    publishMessage(pubsub_topic, userData);
+
+    res.status(200).json({
+        message: 'Registration successful',
+        user: req.user,
+    });
 });
+
 
 router.post('/login',
     // Passport middleware

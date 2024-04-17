@@ -22,8 +22,12 @@ const UserSchema = new Schema ({
     password: {
         type: String,
         required: true
-    }
+    }, 
 
+    date: {
+        type: Date
+    }
+    
 }, {
     collection: 'users',
     toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
