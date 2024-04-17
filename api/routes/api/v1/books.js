@@ -23,6 +23,8 @@ function createFilterRoutes(path, get=() => Book.find({})) {
 
         const fields = {};
         req.params.fields.split(',').forEach((field) => {
+            if (res.headersSent) return;
+
             field = field.trim();
             let negate = false;
             if (field.startsWith('-')) {
@@ -37,7 +39,10 @@ function createFilterRoutes(path, get=() => Book.find({})) {
         if (res.headersSent) return;
 
         if (!fields._id) fields._id = 0;
-        if (fields.id) fields._id = 1;
+        if (fields.id) {
+            fields._id = 1;
+            delete fields.id;
+        }
         
         query.select(fields).then((books) => {
             res.json(books);
@@ -48,44 +53,70 @@ function createFilterRoutes(path, get=() => Book.find({})) {
     });
 }
 
-function findByRegex(regexArgs) {
-    return (req, res) => {
-        let {prop, val} = req.params;
-
-        if (prop === 'id') prop = '_id';
-        if (!Book.pathExists(prop)) return res.status(400).send(`Invalid property: ${prop}`);
-        
-        if (Book.pathType(prop) === "String") {
-            return Book.find({ [prop]: transformRegex(val, regexArgs) });
-        } else if (Book.pathType(prop) === "Number") {
-            if (val.startsWith(">=")) {
-                val = val.substring(2);
-                return Book.find({ [prop]: { $gte: val } });
-            } else if (val.startsWith("<=")) {
-                val = val.substring(2);
-                return Book.find({ [prop]: { $lte: val } });
-            } else if (val.startsWith('>')) {
-                val = val.substring(1);
-                return Book.find({ [prop]: { $gt: val } });
-            } else if (val.startsWith('<')) {
-                val = val.substring(1);
-                return Book.find({ [prop]: { $lt: val } });
-            } else if (val.startsWith("in_")) {
-                const [min, max] = val.substring(3).split(':');
-                return Book.find({ [prop]: { $gte: min, $lte: max } });
-            } else if (val.startsWith("nin_")) {
-                const [min, max] = val.substring(4).split(':');
-                return Book.find({$or: [{[prop]: {$lt: min}}, {[prop]: {$gt: max}}]});
-            } else {
-                return Book.find({ [prop]: val });
-            }
-        }
-    };
-}
-
 createFilterRoutes('all');
-// by-exact-prop needs to be defined before by-prop or by-prop will catch any by-exact-prop requests and cause an error
-createFilterRoutes('by-exact-:prop/:val', findByRegex({matchWhole: true}));
-createFilterRoutes('by-:prop/:val', findByRegex({caseInsensitive: true, accentInsensitive: true}));
+createFilterRoutes('by-:prop/:val', (req, res) => {
+    let {prop, val} = req.params;
+
+    // Simple trick to add aliases to query parameters. The one at the bottom is the one you should use in your code.
+    const {
+        i = "true",
+        ci = i,
+        case_insensitive = ci,
+
+        m = "false",
+        mw = m,
+        match_whole = mw,
+
+        a = "true",
+        ai = a,
+        accent_insensitive = ai,
+    } = req.query;
+
+    if (prop === 'id') prop = '_id';
+    if (!Book.pathExists(prop)) return res.status(400).send(`Invalid property: ${prop}`);
+    
+    if (Book.pathType(prop) === "String") {
+        return Book.find({
+            [prop]: transformRegex(val, {
+                caseInsensitive: case_insensitive === "true",
+                matchWhole: match_whole === "true",
+                accentInsensitive: accent_insensitive === "true"
+            })
+        });
+    } else if (Book.pathType(prop) === "Number") {
+        if (val.startsWith(">=")) {
+            val = val.substring(2);
+            
+            if (isNaN(val)) return res.status(400).send(`Invalid Number: ${val}`);
+            return Book.find({ [prop]: { $gte: val } });
+        } else if (val.startsWith("<=")) {
+            val = val.substring(2);
+
+            if (isNaN(val)) return res.status(400).send(`Invalid Number: ${val}`);
+            return Book.find({ [prop]: { $lte: val } });
+        } else if (val.startsWith('>')) {
+            val = val.substring(1);
+
+            if (isNaN(val)) return res.status(400).send(`Invalid Number: ${val}`);
+            return Book.find({ [prop]: { $gt: val } });
+        } else if (val.startsWith('<')) {
+            val = val.substring(1);
+
+            if (isNaN(val)) return res.status(400).send(`Invalid Number: ${val}`);
+            return Book.find({ [prop]: { $lt: val } });
+        } else if (val.startsWith("in_")) {
+            const [min, max] = val.substring(3).split(':');
+
+            if (isNaN(min)) return res.status(400).send(`Invalid Min Number: ${min}`);
+            if (isNaN(max)) return res.status(400).send(`Invalid Max Number: ${max}`);
+            return Book.find({ [prop]: { $gte: min, $lte: max } });
+        } else if (val.startsWith("nin_")) {
+            const [min, max] = val.substring(4).split(':');
+            return Book.find({$or: [{[prop]: {$lt: min}}, {[prop]: {$gt: max}}]});
+        } else {
+            return Book.find({ [prop]: val });
+        }
+    }
+});
 
 module.exports = router;

@@ -1,0 +1,298 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Final",
+    "description": "Documentation of Final API"
+  },
+  "host": "localhost:8080",
+  "basePath": "/api/v1",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Root route. Use it to check if the API is running.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+
+    "/books/all": {
+      "get": {
+        "description": "Get all data associated with all books.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/books/all/props/{fields}": {
+      "get": {
+        "description": "Get data associated with all books, but only the specified fields.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "path",
+            "description": "Fields to be returned, separated by commas",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          },
+
+          "400": {
+            "description": "One of the field names does not exist in the book schema. Detail in the response."
+          }
+        }
+      }
+    },
+
+    "/books/by-{prop}/{val}": {
+      "get": {
+        "description": "Get all data associated with the books that have a {prop} comparable to {val}. The specifics of this comparison can be fine-tuned qith query args.",
+        "parameters": [
+          {
+            "name": "prop",
+            "in": "path",
+            "description": "Property to be compared",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "val",
+            "in": "path",
+            "description": "Value to be compared. If the comparison type is equality, nothing else is necessary. You can precede the value with '<', '>', '<=', or '>=' to specify a different comparison type. You can also specify a range by preceding with 'in_' ('nin_' to negate) and separating the values with ':'",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "i",
+            "in": "query",
+            "description": "Alias for case_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "ci",
+            "in": "query",
+            "description": "Alias for case_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "case_insensitive",
+            "description": "Ignore case for the comparison. Default is true.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "m",
+            "in": "query",
+            "description": "Alias for match_whole",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "mw",
+            "in": "query",
+            "description": "Alias for match_whole",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "match_whole",
+            "description": "Match the entire string for the comparison. Default is false.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "a",
+            "in": "query",
+            "description": "Alias for accent_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "ai",
+            "in": "query",
+            "description": "Alias for accent_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "accent_insensitive",
+            "description": "Ignore accents for the comparison. Default is true.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          },
+
+          "400": {
+            "description": "Either the prop name does not exist in the books schema or the value is expected to be a number, but is not. Detail in response."
+          }
+        }
+      }
+    },
+
+    "/books/by-{prop}/{val}/props/{fields}": {
+      "get": {
+        "description": "Get data associated with the books that have a {prop} comparable to {val}, but only the specified fields. The specifics of this comparison can be fine-tuned qith query args.",
+        "parameters": [
+          {
+            "name": "prop",
+            "in": "path",
+            "description": "Property to be compared",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "val",
+            "in": "path",
+            "description": "Value to be compared. If the comparison type is equality, nothing else is necessary. You can precede the value with '<', '>', '<=', or '>=' to specify a different comparison type. You can also specify a range by preceding with 'in_' ('nin_' to negate) and separating the values with ':'",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "fields",
+            "in": "path",
+            "description": "Fields to be returned, separated by commas",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "i",
+            "in": "query",
+            "description": "Alias for case_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "ci",
+            "in": "query",
+            "description": "Alias for case_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "case_insensitive",
+            "description": "Ignore case for the comparison. Default is true.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "m",
+            "in": "query",
+            "description": "Alias for match_whole",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "mw",
+            "in": "query",
+            "description": "Alias for match_whole",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "match_whole",
+            "description": "Match the entire string for the comparison. Default is false.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "a",
+            "in": "query",
+            "description": "Alias for accent_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "ai",
+            "in": "query",
+            "description": "Alias for accent_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "accent_insensitive",
+            "description": "Ignore accents for the comparison. Default is true.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          },
+
+          "400": {
+            "description": "Either the prop name does not exist in the books schema or the value is expected to be a number, but is not. Detail in response."
+          }
+        }
+      }
+    }
+  }
+}
