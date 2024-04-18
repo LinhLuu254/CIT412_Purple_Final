@@ -1,21 +1,12 @@
 import { useState } from "react"
 
 export function SearchBar({
-    onChange = () => {},
-    type: initType = "title"
+    type: initType = "title",
+    search = () => {},
+    disabled = false
 }={}) {
-    const [text, _setText] = useState("");
-    const [type, _setType] = useState(initType);
-
-    function setText(text) {
-        _setText(text);
-        onChange(text, type);
-    }
-
-    function setType(type) {
-        _setType(type);
-        onChange(text, type);
-    }
+    const [text, setText] = useState("");
+    const [type, setType] = useState(initType);
 
     return (
         <div className="input-group mb-3">
@@ -36,6 +27,14 @@ export function SearchBar({
             >
                 <option value="title">Title</option>
             </select>
+
+            <button
+                className="btn-primary"
+                onClick={() => search(text, type)}
+                disabled={disabled}
+            >
+                Search
+            </button>
         </div>
     )
 }

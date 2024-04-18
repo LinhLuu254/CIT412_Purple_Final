@@ -12,29 +12,40 @@ import { SearchBar } from "src/components/SearchBar/SearchBar";
 function Board() {
     const apiURL = useContext(APIURLContext);
 
-    const [books, setBooks] = useState([]);
-    const [loading, error, bookdata] = useBookFetcher(`${apiURL}/books/all/props/title,id,thumbnail,categories,average_rating`);
+    const {loading, error, books, setQuery, setFilter, page, setPage} = useBookFetcher({
+        path: `${apiURL}/books`,
+        filter: "all"
+    });
 
-    function onSearchChange(text, type) {
-        if (bookdata) {
-            setBooks(bookdata.filter((book) => {
-                switch (type) {
-                    case "title":
-                        return book.title.toLowerCase().includes(text.toLowerCase());
-                }
-
-                return false;
-            }));
+    function onSearch(text, type) {
+        if (!loading) {
+            setQuery(text);
+            setFilter(type);
         }
     }
 
-    useEffect(() => {
-        setBooks(bookdata)
-    }, [bookdata])
-
+    if (loading) return <div className="container-sm mx-auto p-3"><p>Loading...</p></div>
     return (
         <div className="container-sm mx-auto p-3">
-            <SearchBar onChange={onSearchChange} />
+            <SearchBar search={onSearch} disabled={loading} />
+
+            <p>Page {page + 1}</p>
+            <button
+                className="btn-primary"
+                onClick={() => setPage((p) => p - 1)}
+                disabled={page === 0}
+            >
+                Previous
+            </button>
+            <button
+                className="btn-primary"
+                onClick={() => setPage((p) => p + 1)}
+                
+                // Determining max page will be later.
+                //disabled={page === 0}
+            >
+                Next
+            </button>
 
             <div className="row">
                 {
