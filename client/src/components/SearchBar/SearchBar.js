@@ -32,7 +32,7 @@ export function SearchBar({
 
     function setType(type) {
         _setType(type);
-        _setText(text.replace(/[^0-9]/g, ""));
+        if (numberTypes.includes(type)) _setText(text.replace(/[^0-9]/g, ""));
         setNumber(numberTypes.includes(type));
     }
 

@@ -1,6 +1,5 @@
 import "src/pages/Board/Board.css"
 import useBookFetcher from "src/hooks/BookFetcher";
-import { useState, useEffect } from "react";
 import {useContext} from 'react';
 import { APIURLContext } from 'src/contexts/APIURLContext';
 import { nanoid } from "nanoid";
@@ -12,7 +11,7 @@ import { SearchBar } from "src/components/SearchBar/SearchBar";
 function Board() {
     const apiURL = useContext(APIURLContext);
 
-    const {loading, error, data: booksData, query, setQuery, filter, setFilter, page, setPage} = useBookFetcher({
+    const {loading, error, data: booksData, query, setQuery, setFilter, page, setPage} = useBookFetcher({
         path: `${apiURL}/books`,
         filter: "all",
         limit: 9
@@ -28,7 +27,7 @@ function Board() {
     if (loading) return <div className="container-sm mx-auto p-3"><p>Loading...</p></div>
     return (
         <div className="container-sm mx-auto p-3">
-            <SearchBar search={onSearch} text={query} type={filter === "all" ? "title" : filter} />
+            <SearchBar search={onSearch} text={query} type="title" />
 
             <p>
                 Showing Page {page + 1} {" "}
