@@ -1,21 +1,61 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+function filterString(type, value) {
+    value = encodeURIComponent(value);
 
-function useBookFetcher (dataSource) {
+    if (type === "all") return "all";
+    if (type.startsWith("min_")) return `by-${type.slice(4)}/>=${value}`;
+    if (type.startsWith("max_")) return `by-${type.slice(4)}/<=${value}`;
+
+    return `by-${type}/${value}`;
+}
+
+function useBookFetcher ({
+    path,
+    filter: initFilter = "all",
+    query: initQuery = "",
+    page: initPage = 0,
+    limit: initLimit = 10,
+    fields: initFields = ["title", "id", "thumbnail", "categories", "average_rating"],
+    sort: initSort = null,
+    caseInsensitive: initCaseInsensitive = true,
+    accentInsensitive: initAccentInsensitive = true,
+    matchWhole: initMatchWhole = false
+}={}) {
     // Set up initial state of state variables
-    const [books, setBooks] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState({});
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    const [filter, setFilter] = useState(initFilter);
+    const [query, setQuery] = useState(initQuery);
+    const [page, setPage] = useState(initPage);
+    const [limit, setLimit] = useState(initLimit);
+    const [fields, setFields] = useState(initFields);
+    const [sort, setSort] = useState(initSort);
+    const [caseInsensitive, setCaseInsensitive] = useState(initCaseInsensitive);
+    const [accentInsensitive, setAccentInsensitive] = useState(initAccentInsensitive);
+    const [matchWhole, setMatchWhole] = useState(initMatchWhole);
+
     useEffect(() => {
-        
         // Define a function that loads tasks from the API
         const loadBooks = async () => {
+            const dataSource = 
+                `${path}/${filterString(filter, query)}/props/${fields.join(",")}?`
+                + `p=${page}&`
+                + `l=${limit}&`
+                + `s=${sort}&`
+                + `i=${caseInsensitive}&`
+                + `m=${matchWhole}&`
+                + `a=${accentInsensitive}`
+            ;
+
             try {
+                setLoading(true);
                 const response = await axios.get(dataSource);
                 console.log(response.data);
-                setBooks((books) => [...response.data]);
+                setData({...response.data});
                 setLoading(false);
             } catch (err) {
                 setLoading(false);
@@ -23,14 +63,21 @@ function useBookFetcher (dataSource) {
                 console.error(err);
             }
         };
-
-        // Call the function we defined
-        setLoading(true);
+        
         loadBooks();
+    }, [path, filter, query, fields, page, limit, sort, caseInsensitive, matchWhole, accentInsensitive]);
 
-    }, [])
+    return {
+        loading, error, data,
 
-    return [loading, error, books];
+        setFilter, setQuery, setPage,
+        setLimit, setFields, setSort,
+        setCaseInsensitive, setAccentInsensitive,
+        setMatchWhole,
+
+        filter, query, page, limit, fields, sort,
+        caseInsensitive, accentInsensitive, matchWhole
+    };
 
 
 }
