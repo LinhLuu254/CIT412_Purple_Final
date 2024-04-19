@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+function filterString(type, value) {
+    value = encodeURIComponent(value);
+
+    if (type === "all") return "all";
+    if (type.startsWith("min_")) return `by-${type.slice(4)}/>=${value}`;
+    if (type.startsWith("max_")) return `by-${type.slice(4)}/<=${value}`;
+
+    return `by-${type}/${value}`;
+}
 
 function useBookFetcher ({
     path,
@@ -15,8 +24,8 @@ function useBookFetcher ({
     matchWhole: initMatchWhole = false
 }={}) {
     // Set up initial state of state variables
-    const [books, setBooks] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState({});
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     const [filter, setFilter] = useState(initFilter);
@@ -33,7 +42,7 @@ function useBookFetcher ({
         // Define a function that loads tasks from the API
         const loadBooks = async () => {
             const dataSource = 
-                `${path}/${filter === "all" ? filter : `by-${filter}/${encodeURIComponent(query)}`}/props/${fields.join(",")}?`
+                `${path}/${filterString(filter, query)}/props/${fields.join(",")}?`
                 + `p=${page}&`
                 + `l=${limit}&`
                 + `s=${sort}&`
@@ -46,7 +55,7 @@ function useBookFetcher ({
                 setLoading(true);
                 const response = await axios.get(dataSource);
                 console.log(response.data);
-                setBooks([...response.data]);
+                setData({...response.data});
                 setLoading(false);
             } catch (err) {
                 setLoading(false);
@@ -59,7 +68,7 @@ function useBookFetcher ({
     }, [path, filter, query, fields, page, limit, sort, caseInsensitive, matchWhole, accentInsensitive]);
 
     return {
-        loading, error, books,
+        loading, error, data,
 
         setFilter, setQuery, setPage,
         setLimit, setFields, setSort,
