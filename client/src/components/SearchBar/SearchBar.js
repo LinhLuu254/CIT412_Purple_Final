@@ -17,7 +17,8 @@ const numberTypes = [
 export function SearchBar({
     type: initType = "title",
     text: initText = "",
-    search = () => {}
+    search = () => {},
+    reset = () => {}
 }={}) {
     const [text, _setText] = useState(initText);
     const [type, _setType] = useState(initType);
@@ -54,6 +55,7 @@ export function SearchBar({
                 value={type}
                 onChange={(e) => setType(e.target.value)}
             >
+                <option value="all">(Select One)</option>
                 <option value="title">Title</option>
                 <option value="subtitle">Subtitle</option>
                 <option value="description">Description</option>
@@ -87,10 +89,7 @@ export function SearchBar({
 
             <button
                 className="btn-primary"
-                onClick={() => {
-                    setText(initText);
-                    setType(initType);
-                }}
+                onClick={() => reset()}
             >
                 Reset
             </button>
