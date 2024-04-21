@@ -32,6 +32,7 @@ function Board() {
     }, [loading, setQuery, setFilter, setPage]);
 
     if (loading) return <div className="container-sm mx-auto p-3"><p>Loading...</p></div>
+    if (error) return <div className="container-sm mx-auto p-3"><p>Error: {error}</p></div>
     return (
         <div className="container-sm mx-auto p-3">
             <SearchBar search={onSearch} reset={onReset} text={query} type={filter} />

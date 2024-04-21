@@ -8,14 +8,44 @@ const User = mongoose.model("User");
 const {PubSub} = require('@google-cloud/pubsub');
 
 
-router.get('/', async (req, res) => {
-    const users = await User.find();
+router.get('/all', async (req, res) => {
+    const users = (await User.find()).map(user => user.toJSON());
+
+    // Do not return with the password hash
+    users.forEach(user => delete user.password);
+
     res.json(users);
 });
 
-router.get("/user/:id", async (req, res) => {
-    const user = await User.findById(req.params.id);
+router.get("/one/:id", async (req, res) => {
+    const user = (await User.findById(req.params.id)).toJSON();
+
+    // Do not return with the password hash
+    delete user.password;
+
     res.json(user);
+});
+
+router.patch("/one/:id", async (req, res) => {
+    const updated = await User.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    res.json(updated);
+});
+
+router.post("/one/:user_id/toggle-favorite/:book_id", async (req, res) => {
+    const user = (await User.findById(req.params.user_id)).toJSON();
+    const bookId = req.params.book_id;
+    const favorites = user.favorites.map(id => id.toString());
+
+    console.log(favorites, bookId, favorites.includes(bookId));
+
+    if (favorites.includes(bookId)) {
+        user.favorites = favorites.filter(id => id !== bookId);
+    } else {
+        user.favorites.push(bookId);
+    }
+
+    const result = await User.findByIdAndUpdate(req.params.user_id, {favorites: user.favorites}, {new: true});
+    res.json(result);
 });
 
 

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 const numberTypes = [
     "isbn13",
@@ -24,18 +24,18 @@ export function SearchBar({
     const [type, _setType] = useState(initType);
     const [number, setNumber] = useState(numberTypes.includes(type));
 
-    function setText(text) {
+    const setText = useCallback((text) => {
         if (number) {
             text = text.replace(/[^0-9]/g, "");
         }
         _setText(text);
-    }
+    }, [number]);
 
-    function setType(type) {
+    const setType = useCallback((type) => {
         _setType(type);
         if (numberTypes.includes(type)) _setText(text.replace(/[^0-9]/g, ""));
         setNumber(numberTypes.includes(type));
-    }
+    }, [text]);
 
     return (
         <div className="input-group mb-3">

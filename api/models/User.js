@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
+const ObjectId = Schema.Types.ObjectId;
 
 const UserSchema = new Schema ({
 
@@ -26,12 +27,16 @@ const UserSchema = new Schema ({
 
     date: {
         type: Date
-    }
-    
+    },
+
+    favorites: [
+        {
+            type: ObjectId,
+            ref: 'Book'
+        }
+    ]
 }, {
-    collection: 'users',
-    toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
-    toObject: { virtuals: true }
+    collection: 'users'
 });
 
 
