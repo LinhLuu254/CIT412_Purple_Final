@@ -19,6 +19,7 @@ function useBookFetcher ({
     limit: initLimit = 10,
     fields: initFields = ["title", "id", "thumbnail", "categories", "average_rating"],
     sort: initSort = null,
+    descending: initDescending = false,
     caseInsensitive: initCaseInsensitive = true,
     accentInsensitive: initAccentInsensitive = true,
     matchWhole: initMatchWhole = false
@@ -34,6 +35,7 @@ function useBookFetcher ({
     const [limit, setLimit] = useState(initLimit);
     const [fields, setFields] = useState(initFields);
     const [sort, setSort] = useState(initSort);
+    const [descending, setDescending] = useState(initDescending);
     const [caseInsensitive, setCaseInsensitive] = useState(initCaseInsensitive);
     const [accentInsensitive, setAccentInsensitive] = useState(initAccentInsensitive);
     const [matchWhole, setMatchWhole] = useState(initMatchWhole);
@@ -54,6 +56,7 @@ function useBookFetcher ({
             try {
                 setLoading(true);
                 const response = await axios.get(dataSource);
+                response.data.books = descending ? response.data.books.reverse() : response.data.books;
                 //console.log(response.data);
                 setData({...response.data});
                 setLoading(false);
@@ -65,7 +68,7 @@ function useBookFetcher ({
         };
         
         loadBooks();
-    }, [path, filter, query, fields, page, limit, sort, caseInsensitive, matchWhole, accentInsensitive]);
+    }, [path, filter, query, fields, page, limit, sort, descending, caseInsensitive, matchWhole, accentInsensitive]);
 
     return {
         loading, error, data,
@@ -73,10 +76,11 @@ function useBookFetcher ({
         setFilter, setQuery, setPage,
         setLimit, setFields, setSort,
         setCaseInsensitive, setAccentInsensitive,
-        setMatchWhole,
+        setMatchWhole, setDescending,
 
         filter, query, page, limit, fields, sort,
-        caseInsensitive, accentInsensitive, matchWhole
+        caseInsensitive, accentInsensitive, matchWhole,
+        descending
     };
 
 

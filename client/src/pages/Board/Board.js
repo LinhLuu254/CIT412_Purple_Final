@@ -10,21 +10,35 @@ import useFavoritesFetcher from "src/hooks/FavoritesFetcher";
 function Board() {
     const apiURL = useContext(APIURLContext);
 
-    const {loading: booksLoading, error: booksError, data: booksData, setQuery, query, setFilter, filter, page, setPage} = useBookFetcher({
+    const {
+        loading: booksLoading, error: booksError, data: booksData,
+        setQuery, query, setFilter, filter, page, setPage,
+        setMatchWhole, matchWhole,
+        setCaseInsensitive, caseInsensitive,
+        setAccentInsensitive, accentInsensitive,
+        setDescending, descending
+    } = useBookFetcher({
         path: `${apiURL}/books`,
         filter: "all",
         limit: 9
     });
 
-    const {loading: favoritesLoading, error: favoritesError, data: favorites, loadFavorites: refreshFavorites} = useFavoritesFetcher({
+    const {
+        loading: favoritesLoading, error: favoritesError, data: favorites,
+        loadFavorites: refreshFavorites
+    } = useFavoritesFetcher({
         path: `${apiURL}/users`
     });
 
-    const onSearch = useCallback((text, type) => {
+    const onSearch = useCallback(({text, type, matchWhole, caseInsensitive, accentInsensitive, descending}) => {
         if (!booksLoading) {
             setQuery(text);
             setFilter(type);
             setPage(0);
+            setMatchWhole(matchWhole);
+            setCaseInsensitive(caseInsensitive);
+            setAccentInsensitive(accentInsensitive);
+            setDescending(descending);
         }
     }, [booksLoading, setQuery, setFilter, setPage]);
 
@@ -33,6 +47,10 @@ function Board() {
             setQuery("");
             setFilter("all");
             setPage(0);
+            setMatchWhole(false);
+            setCaseInsensitive(true);
+            setAccentInsensitive(true);
+            setDescending(false);
         }
     }, [booksLoading, setQuery, setFilter, setPage]);
 
@@ -40,7 +58,16 @@ function Board() {
     if (booksError || favoritesError) return <div className="container-sm mx-auto p-3"><p>Error: {booksError || favoritesError}</p></div>
     return (
         <div className="container-sm mx-auto p-3">
-            <SearchBar search={onSearch} reset={onReset} text={query} type={filter} />
+            <SearchBar
+                search={onSearch}
+                reset={onReset}
+                text={query}
+                type={filter}
+                caseInsensitive={caseInsensitive}
+                matchWhole={matchWhole}
+                accentInsensitive={accentInsensitive}
+                descending={descending}
+            />
 
             <p>
                 Showing Page {page + 1} {" "}

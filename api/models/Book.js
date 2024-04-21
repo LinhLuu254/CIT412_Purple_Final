@@ -3,7 +3,8 @@ const { isValidURL } = require('lib/Regex');
 const Schema = mongoose.Schema;
 
 const importantWordOverrides = {
-    "big": true
+    "big": true,
+    "red": true
 };
 function toTitleCase(str="") {
     const words = str.split(" ");
