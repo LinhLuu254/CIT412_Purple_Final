@@ -20,9 +20,8 @@ export default function ProfilePage() {
     useEffect(() => {
         const loadUser = async () => {
             try {
-                const response = await axios.get(`${apiURL}/users/user/${_id}`);
+                const response = await axios.get(`${apiURL}/users/one/${_id}`);
                 setUser(response.data)
-
 
             }catch (error){
                 console.error(error);
@@ -31,9 +30,7 @@ export default function ProfilePage() {
         }
 
         loadUser();
-
-
-    }, [_id]);
+    }, [_id, apiURL]);
 
     //Nagvigate Register when not user
     if (!user) {
@@ -47,8 +44,8 @@ export default function ProfilePage() {
     }
 
 
-    console.log(`Token: ${token}`);
-    console.log(`ID: ${_id}`);
+    //console.log(`Token: ${token}`);
+    //console.log(`ID: ${_id}`);
 
     return(
         <div>

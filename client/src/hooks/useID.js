@@ -7,7 +7,7 @@ export default function useID() {
         const IDString = localStorage.getItem('_id');
         const userID = JSON.parse(IDString);
         if (userID) {
-            console.log(`Found _id`);
+            //console.log(`Found _id`);
             return userID;
         } else {
             return null;

@@ -1,14 +1,17 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useContext } from 'react';
 import 'src/components/Book/Book.css'
+import { APIURLContext } from 'src/contexts/APIURLContext';
+import useFavoriteToggler from 'src/hooks/FavoriteToggler';
 
 
-function Books({bookID, bookTitle, bookCategory, bookThumbnail, bookRating}) {
-
-    //console.log(`Book's id: ${bookID}`)
+function Books({bookID, bookTitle, bookCategory, bookThumbnail, bookRating, favorite, refreshFavorites}) {
+    const apiURL = useContext(APIURLContext);
+    const {toggleFavorite, loading: toggleLoading, error: toggleError} = useFavoriteToggler({
+        path: `${apiURL}/users`,
+        bookID
+    });
 
     return (
-
         <div className="col-md-4">
             <div className="card p-2" id="bookCard">
                 {
@@ -23,7 +26,12 @@ function Books({bookID, bookTitle, bookCategory, bookThumbnail, bookRating}) {
                     <h5 className="card-title">{bookTitle}</h5>
                     <p className="card-text"><strong>Categories: </strong><i>{bookCategory?.join(", ") || "[None]"}</i></p>
                     <p className="card-text"><strong>Rate: </strong><b>{bookRating || "[None]"}</b></p>
-                    <p id="link"><RouterLink to='/login' >Login for more detail..</RouterLink></p>
+                    <button className="btn btn-primary" onClick={() => toggleFavorite({onSuccess: refreshFavorites})}>
+                        {
+                            toggleLoading ? "Loading..." : toggleError ? "Error" :
+                            favorite ? "Remove from Favorites" : "Add to Favorites"
+                        }
+                    </button>
                 </div>
             </div>
         </div>

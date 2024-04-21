@@ -54,7 +54,7 @@ function useBookFetcher ({
             try {
                 setLoading(true);
                 const response = await axios.get(dataSource);
-                console.log(response.data);
+                //console.log(response.data);
                 setData({...response.data});
                 setLoading(false);
             } catch (err) {

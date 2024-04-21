@@ -5,34 +5,39 @@ import { APIURLContext } from 'src/contexts/APIURLContext';
 import { nanoid } from "nanoid";
 import Books from "src/components/Book/Book";
 import { SearchBar } from "src/components/SearchBar/SearchBar";
+import useFavoritesFetcher from "src/hooks/FavoritesFetcher";
 
 function Board() {
     const apiURL = useContext(APIURLContext);
 
-    const {loading, error, data: booksData, setQuery, query, setFilter, filter, page, setPage} = useBookFetcher({
+    const {loading: booksLoading, error: booksError, data: booksData, setQuery, query, setFilter, filter, page, setPage} = useBookFetcher({
         path: `${apiURL}/books`,
         filter: "all",
         limit: 9
     });
 
+    const {loading: favoritesLoading, error: favoritesError, data: favorites, loadFavorites: refreshFavorites} = useFavoritesFetcher({
+        path: `${apiURL}/users`
+    });
+
     const onSearch = useCallback((text, type) => {
-        if (!loading) {
+        if (!booksLoading) {
             setQuery(text);
             setFilter(type);
             setPage(0);
         }
-    }, [loading, setQuery, setFilter, setPage]);
+    }, [booksLoading, setQuery, setFilter, setPage]);
 
     const onReset = useCallback(() => {
-        if (!loading) {
+        if (!booksLoading) {
             setQuery("");
             setFilter("all");
             setPage(0);
         }
-    }, [loading, setQuery, setFilter, setPage]);
+    }, [booksLoading, setQuery, setFilter, setPage]);
 
-    if (loading) return <div className="container-sm mx-auto p-3"><p>Loading...</p></div>
-    if (error) return <div className="container-sm mx-auto p-3"><p>Error: {error}</p></div>
+    if (booksLoading || favoritesLoading) return <div className="container-sm mx-auto p-3"><p>Loading...</p></div>
+    if (booksError || favoritesError) return <div className="container-sm mx-auto p-3"><p>Error: {booksError || favoritesError}</p></div>
     return (
         <div className="container-sm mx-auto p-3">
             <SearchBar search={onSearch} reset={onReset} text={query} type={filter} />
@@ -80,13 +85,15 @@ function Board() {
                     booksData.books.map((book) =>(
                         <Books
                             key = {nanoid()}
-                            loading={loading}
-                            error={error}
+                            loading={booksLoading}
+                            error={booksError}
                             bookID={book._id}
                             bookTitle={book.title}
                             bookCategory={book.categories}
                             bookThumbnail={book.thumbnail} 
-                            bookRating={book.average_rating}   
+                            bookRating={book.average_rating}
+                            favorite={favorites.includes(book._id)}
+                            refreshFavorites={refreshFavorites}
                         />
 
                     ))

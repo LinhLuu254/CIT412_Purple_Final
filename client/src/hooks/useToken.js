@@ -6,7 +6,7 @@ export default function useToken() {
         const tokenString = localStorage.getItem('accessToken');
         const userToken = JSON.parse(tokenString);
         if (userToken) {
-            console.log(`Found userToken`);
+            //console.log(`Found userToken`);
             return userToken;
         } else {
             return null;

@@ -18,18 +18,18 @@ export default function LoginForm() {
         return <Navigate replace to='/profile' />
     }
 
-    console.log(`My API URL ${apiURL}`);
-    console.log(_id);
+    //console.log(`My API URL ${apiURL}`);
+    //console.log(_id);
 
     //Function that posts form data to the API
     async function loginUser(credentials) {
         try {
             const res = await axios.post(apiURL + '/users/login', credentials);
-            console.log(res.data);
+            //console.log(res.data);
             return res.data;
 
         } catch (err) {
-            console.log(err);
+            //console.log(err);
             return null
         }
 
@@ -53,12 +53,12 @@ export default function LoginForm() {
         loginCredentials.email = inputs.email;
         loginCredentials.password = inputs.password;
 
-        console.log(`Login credentials: `);
-        console.log(loginCredentials);
+        //console.log(`Login credentials: `);
+        //console.log(loginCredentials);
 
         const loginResponse = await loginUser(loginCredentials);
-        console.log(`Login response:`);
-        console.log(loginResponse);
+        //console.log(`Login response:`);
+        //console.log(loginResponse);
 
         if (loginResponse == null) {
             alert(`That username and password is not valid!`);

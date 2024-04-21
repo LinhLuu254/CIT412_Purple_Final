@@ -31,22 +31,27 @@ router.patch("/one/:id", async (req, res) => {
     res.json(updated);
 });
 
-router.post("/one/:user_id/toggle-favorite/:book_id", async (req, res) => {
-    const user = (await User.findById(req.params.user_id)).toJSON();
-    const bookId = req.params.book_id;
-    const favorites = user.favorites.map(id => id.toString());
+router.post("/one/:user_id/toggle-favorite/:book_id",
+    passport.authenticate('jwt', { session: false}),
 
-    console.log(favorites, bookId, favorites.includes(bookId));
+    // Authenticated
+    async (req, res) => {
+        if (req.user.id !== req.params.user_id) return res.status(401).json({message: "Unauthorized"});
 
-    if (favorites.includes(bookId)) {
-        user.favorites = favorites.filter(id => id !== bookId);
-    } else {
-        user.favorites.push(bookId);
+        const user = (await User.findById(req.params.user_id)).toJSON();
+        const bookId = req.params.book_id;
+        const favorites = user.favorites.map(id => id.toString());
+
+        if (favorites.includes(bookId)) {
+            user.favorites = favorites.filter(id => id !== bookId);
+        } else {
+            user.favorites.push(bookId);
+        }
+
+        const result = await User.findByIdAndUpdate(req.params.user_id, {favorites: user.favorites}, {new: true});
+        res.json(result);
     }
-
-    const result = await User.findByIdAndUpdate(req.params.user_id, {favorites: user.favorites}, {new: true});
-    res.json(result);
-});
+);
 
 
 router.post('/register', passport.authenticate('register', { session: false }), async (req, res) => {

@@ -39,7 +39,7 @@ const RegisterForm = () => {
       if (response.ok) {
         // Registration successful, redirect and display success message
         alert(`Registration successful`);
-        console.log('Registration successful');
+        //console.log('Registration successful');
         navigate('/login');
 
       } else {

@@ -92,6 +92,7 @@ passport.use(
 
 // 3 - JWT strategy for reading a token and providing access to a resource
 passport.use(
+    'jwt',
     new JWTstrategy(
         // Passport retrieves the token from the request header and uses the secret key in the .env file to determine which user sent the request
         // It then calls a function that extracts a user object and returns it (getUserFromToken)
