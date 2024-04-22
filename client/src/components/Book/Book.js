@@ -2,10 +2,12 @@ import React, { useContext } from 'react';
 import 'src/components/Book/Book.css'
 import { APIURLContext } from 'src/contexts/APIURLContext';
 import useFavoriteToggler from 'src/hooks/FavoriteToggler';
+import useID from 'src/hooks/useID';
 
 
 function Books({bookID, bookTitle, bookCategory, bookThumbnail, bookRating, favorite, refreshFavorites}) {
     const apiURL = useContext(APIURLContext);
+    const {_id} = useID();
     const {toggleFavorite, loading: toggleLoading, error: toggleError} = useFavoriteToggler({
         path: `${apiURL}/users`,
         bookID
@@ -28,10 +30,13 @@ function Books({bookID, bookTitle, bookCategory, bookThumbnail, bookRating, favo
                     <p className="card-text"><strong>Rate: </strong><b>{bookRating || "[None]"}</b></p>
                     <button
                         className="btn btn-primary"
-                        onClick={() => toggleFavorite({onSuccess: refreshFavorites})}
-                        disabled={toggleLoading}
+                        onClick={() => {
+                            if (_id) toggleFavorite({onSuccess: refreshFavorites});
+                        }}
+                        disabled={toggleLoading || !_id}
                     >
                         {
+                            !_id ? "Login to Favorite" :
                             toggleLoading ? "Loading..." : toggleError ? "Error" :
                             favorite ? "Remove from Favorites" : "Add to Favorites"
                         }

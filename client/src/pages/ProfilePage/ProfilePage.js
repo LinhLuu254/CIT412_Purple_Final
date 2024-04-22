@@ -1,9 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import useToken from 'src/hooks/useToken';
 import useID from 'src/hooks/useID';
-import { useState, useEffect, useContext} from "react";
+import { useState, useEffect, useContext, useCallback} from "react";
 import axios from 'axios';
 import { APIURLContext } from "src/contexts/APIURLContext";
+import Books from 'src/components/Book/Book';
 
 
 export default function ProfilePage() {
@@ -17,20 +18,20 @@ export default function ProfilePage() {
 
     // const apiURL = useContext(APIURLContext);
 
-    useEffect(() => {
-        const loadUser = async () => {
-            try {
-                const response = await axios.get(`${apiURL}/users/one/${_id}`);
-                setUser(response.data)
+    const loadUser = useCallback(async () => {
+        try {
+            const response = await axios.get(`${apiURL}/users/one/${_id}?i=true`);
+            setUser(response.data)
 
-            }catch (error){
-                console.error(error);
+        }catch (error){
+            console.error(error);
 
-            }
         }
-
-        loadUser();
     }, [_id, apiURL]);
+
+    useEffect(() => {
+        loadUser();
+    }, [loadUser]);
 
     //Nagvigate Register when not user
     if (!user) {
@@ -53,6 +54,25 @@ export default function ProfilePage() {
                 <h2>User's Info</h2>
                 <p>Username: {user.name}</p>
                 <p>Useremail: {user.email}</p>
+
+                <h2>Favorite Books</h2>
+                <div className="row">
+                    {
+                        user?.favorites?.map((book) =>
+                            <Books
+                                key={book._id}
+                                book={book}
+                                bookID={book._id}
+                                bookTitle={book.title}
+                                bookCategory={book.categories}
+                                bookThumbnail={book.thumbnail} 
+                                bookRating={book.average_rating}
+                                favorite={true}
+                                refreshFavorites={loadUser}
+                            />
+                        )
+                    }
+                </div>
             </div>
         </div>
     )

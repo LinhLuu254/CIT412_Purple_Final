@@ -16,7 +16,10 @@ function Header() {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className='nav-item'>
-                                    <RouterLink to='/' className='Header-link'>Home</RouterLink>
+                                <RouterLink to='/' className='Header-link'>Home</RouterLink>
+                            </li>
+                            <li className='nav-item'>
+                                <RouterLink to='/profile' className='Header-link'>Profile</RouterLink>
                             </li>
                             <li className='nav-item'>
                                 <RouterLink to='/register' className='Header-link'>Register</RouterLink>

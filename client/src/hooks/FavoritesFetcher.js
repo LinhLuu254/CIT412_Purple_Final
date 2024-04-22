@@ -4,12 +4,14 @@ import useID from 'src/hooks/useID';
 import useToken from 'src/hooks/useToken';
 
 export default function useFavoritesFetcher({
-    path
+    path,
+    includeBooks: initIncludeBooks = false
 }={}) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    const [includeBooks, setIncludeBooks] = useState(initIncludeBooks);
     const {token} = useToken();
     const {_id: userId} = useID();
 
@@ -21,14 +23,14 @@ export default function useFavoritesFetcher({
         if (!token || !userId) {
             setLoading(false);
             
-            const err = new Error("Not Logged In");
-            setError(err.message);
-            onError(err);
+            // const err = new Error("Not Logged In");
+            // setError(err.message);
+            // onError(err);
             return;
         }
 
         setLoading(true);
-        axios.get(`${path}/one/${userId}`, {}, {
+        axios.get(`${path}/one/${userId}?i=${includeBooks}`, {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -45,7 +47,7 @@ export default function useFavoritesFetcher({
             setLoading(false);
             onComplete();
         });
-    }, [path, token, userId]);
+    }, [path, token, userId, includeBooks]);
 
     useEffect(() => {
         loadFavorites();
@@ -53,6 +55,7 @@ export default function useFavoritesFetcher({
 
     return {
         loading, error, data,
+        includeBooks, setIncludeBooks,
         userId, loadFavorites
     };
 }

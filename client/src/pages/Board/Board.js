@@ -25,10 +25,16 @@ function Board() {
 
     const {
         loading: favoritesLoading, error: favoritesError, data: favorites,
-        loadFavorites: refreshFavorites
+        loadFavorites, userId
     } = useFavoritesFetcher({
         path: `${apiURL}/users`
     });
+
+    function refreshFavorites() {
+        if (userId) {
+            loadFavorites();
+        }
+    }
 
     const onSearch = useCallback(({text, type, matchWhole, caseInsensitive, accentInsensitive, descending}) => {
         if (!booksLoading) {
@@ -40,7 +46,7 @@ function Board() {
             setAccentInsensitive(accentInsensitive);
             setDescending(descending);
         }
-    }, [booksLoading, setQuery, setFilter, setPage]);
+    }, [booksLoading, setQuery, setFilter, setPage, setMatchWhole, setCaseInsensitive, setAccentInsensitive, setDescending]);
 
     const onReset = useCallback(() => {
         if (!booksLoading) {
@@ -52,7 +58,7 @@ function Board() {
             setAccentInsensitive(true);
             setDescending(false);
         }
-    }, [booksLoading, setQuery, setFilter, setPage]);
+    }, [booksLoading, setQuery, setFilter, setPage, setMatchWhole, setCaseInsensitive, setAccentInsensitive, setDescending]);
 
     if (booksError || favoritesError) return <div className="container-sm mx-auto p-3"><p>Error: {booksError || favoritesError}</p></div>
     return (
@@ -71,7 +77,7 @@ function Board() {
             <p>
                 Showing Page {page + 1} {" "}
                 (books {booksData.startIndex + 1}-{booksData.endIndex})
-                of {booksData.maxPage + 1} pages ({booksData.count} books total)
+                of {booksData.maxPage} pages ({booksData.count} books total)
             </p>
 
             {booksLoading || favoritesLoading ? <p>Loading...</p> : null}
@@ -94,7 +100,7 @@ function Board() {
                 className="btn-primary"
                 onClick={() => setPage((p) => p + 1)}
                 
-                disabled={page === booksData.maxPage}
+                disabled={page === booksData.maxPage - 1}
             >
                 Next
             </button>
@@ -111,7 +117,7 @@ function Board() {
                 {
                     booksData?.books?.map((book) =>(
                         <Books
-                            key = {nanoid()}
+                            key = {book._id}
                             loading={booksLoading}
                             error={booksError}
                             bookID={book._id}
