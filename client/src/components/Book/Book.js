@@ -26,7 +26,11 @@ function Books({bookID, bookTitle, bookCategory, bookThumbnail, bookRating, favo
                     <h5 className="card-title">{bookTitle}</h5>
                     <p className="card-text"><strong>Categories: </strong><i>{bookCategory?.join(", ") || "[None]"}</i></p>
                     <p className="card-text"><strong>Rate: </strong><b>{bookRating || "[None]"}</b></p>
-                    <button className="btn btn-primary" onClick={() => toggleFavorite({onSuccess: refreshFavorites})}>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => toggleFavorite({onSuccess: refreshFavorites})}
+                        disabled={toggleLoading}
+                    >
                         {
                             toggleLoading ? "Loading..." : toggleError ? "Error" :
                             favorite ? "Remove from Favorites" : "Add to Favorites"
