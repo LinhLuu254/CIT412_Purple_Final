@@ -48,8 +48,8 @@ export function SearchBar({
     }, [text]);
 
     return (
-        <>
-            <div className="input-group mb-3">
+        <div className="mb-3">
+            <div className="input-group">
                 <input 
                     type="text" 
                     className="form-control" 
@@ -151,6 +151,6 @@ export function SearchBar({
                     <label className="form-check-label" htmlFor="descending">Descending</label>
                 </div>
             </div>
-        </>
+        </div>
     )
 }

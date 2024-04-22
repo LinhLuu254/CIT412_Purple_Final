@@ -3,25 +3,55 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-require("models/User");
-const User = mongoose.model("User");
+const User = require("models/User");
+const Book = require("models/Book");
 const {PubSub} = require('@google-cloud/pubsub');
 
 
 router.get('/all', async (req, res) => {
+    const {
+        i = "false",
+        b = i,
+        ib = b,
+        include_books = ib
+    } = req.query;
+
     const users = (await User.find()).map(user => user.toJSON());
 
     // Do not return with the password hash
     users.forEach(user => delete user.password);
 
+    if (include_books === "true") {
+        for (let i = 0; i < users.length; i++) {
+            for (let j = 0; j < users[i].favorites.length; j++) {
+                const book = await Book.findById(users[i].favorites[j]);
+                users[i].favorites[j] = book.toJSON();
+            }
+        }
+    }
+
     res.json(users);
 });
 
 router.get("/one/:id", async (req, res) => {
+    const {
+        i = "false",
+        b = i,
+        ib = b,
+        include_books = ib
+    } = req.query;
+
     const user = (await User.findById(req.params.id)).toJSON();
 
     // Do not return with the password hash
     delete user.password;
+
+    if (include_books === "true") {
+       for (let i = 0; i < user.favorites.length; i++) {
+            const book = await Book.findById(user.favorites[i]);
+            user.favorites[i] = book.toJSON();
+       }
+    }
 
     res.json(user);
 });
