@@ -518,6 +518,126 @@
           }
         }
       }
+    },
+
+    "/users/all": {
+      "get": {
+        "description": "Get all data associated with all users.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "i",
+            "description": "Alias for include_books",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "in": "query",
+            "name": "b",
+            "description": "Alias for include_books",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "in": "query",
+            "name": "include_books",
+            "description": "Include the full book details associated with the user's favorites instead of just the book IDs. Default is false.",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/users/one/{id}": {
+      "get": {
+        "description": "Get all data associated with the user with the specified ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "in": "query",
+            "name": "i",
+            "description": "Alias for include_books",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "in": "query",
+            "name": "b",
+            "description": "Alias for include_books",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "in": "query",
+            "name": "include_books",
+            "description": "Include the full book details associated with the user's favorites instead of just the book IDs. Default is false.",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+
+      "patch": {
+        "description": "Update the user with the specified ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "type": "string"
+          },
+          
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User object with the fields to be updated",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   }
 }

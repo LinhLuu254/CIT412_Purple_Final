@@ -2,7 +2,6 @@ import "src/pages/Board/Board.css"
 import useBookFetcher from "src/hooks/BookFetcher";
 import {useCallback, useContext} from 'react';
 import { APIURLContext } from 'src/contexts/APIURLContext';
-import { nanoid } from "nanoid";
 import Books from "src/components/Book/Book";
 import { SearchBar } from "src/components/SearchBar/SearchBar";
 import useFavoritesFetcher from "src/hooks/FavoritesFetcher";
