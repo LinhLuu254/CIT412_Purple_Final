@@ -54,7 +54,6 @@ function Board() {
         }
     }, [booksLoading, setQuery, setFilter, setPage]);
 
-    if (booksLoading || favoritesLoading) return <div className="container-sm mx-auto p-3"><p>Loading...</p></div>
     if (booksError || favoritesError) return <div className="container-sm mx-auto p-3"><p>Error: {booksError || favoritesError}</p></div>
     return (
         <div className="container-sm mx-auto p-3">
@@ -75,6 +74,7 @@ function Board() {
                 of {booksData.maxPage + 1} pages ({booksData.count} books total)
             </p>
 
+            {booksLoading || favoritesLoading ? <p>Loading...</p> : null}
             <button
                 className="btn-primary me-2"
                 onClick={() => setPage(0)}
@@ -109,7 +109,7 @@ function Board() {
 
             <div className="row">
                 {
-                    booksData.books.map((book) =>(
+                    booksData?.books?.map((book) =>(
                         <Books
                             key = {nanoid()}
                             loading={booksLoading}
