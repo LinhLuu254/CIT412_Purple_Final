@@ -100,7 +100,7 @@ function createFilterRoutes(path, _get=() => () => Book.find({})) {
     });
 }
 
-function byValue(prop, val, req, res, {case_insensitive, match_whole, accent_insensitive, callback=(obj) => Book.find(obj)}) {
+function byValue(prop, val, res, {case_insensitive, match_whole, accent_insensitive, callback=(obj) => Book.find(obj)}) {
     if (!Book.pathExists(prop)) return () => res.status(400).json({message: `Invalid property: ${prop}`});
 
     let result;
@@ -171,7 +171,7 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
     } = req.query;
     
     if (prop === 'id') prop = '_id';
-    return byValue(prop, val, req, res, {case_insensitive, match_whole, accent_insensitive});
+    return byValue(prop, val, res, {case_insensitive, match_whole, accent_insensitive});
 });
 
 createFilterRoutes("favorited-by/:userId", async (req) => {
@@ -206,12 +206,11 @@ createFilterRoutes("favorited-by/:userId/by-:prop/:val", async (req, res) => {
     if (prop === 'id') prop = '_id';
     if (prop === "_id") return () => res.status(400).json({message: "Cannot filter by _id"});
 
-    return byValue(prop, val, req, res, {
+    return byValue(prop, val, res, {
         case_insensitive,
         match_whole,
         accent_insensitive,
         callback: (obj) => Book.find({ ...obj, _id: { $in: user.favorites.map((id) => id.toString()) } })
-
     });
 });
 
