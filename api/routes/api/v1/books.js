@@ -100,7 +100,58 @@ function createFilterRoutes(path, _get=() => () => Book.find({})) {
     });
 }
 
+function byValue(prop, val, req, res, {case_insensitive, match_whole, accent_insensitive, callback=(obj) => Book.find(obj)}) {
+    if (!Book.pathExists(prop)) return () => res.status(400).json({message: `Invalid property: ${prop}`});
+
+    let result;
+    if (Book.pathType(prop) === "String") {
+        result = callback({
+            [prop]: transformRegex(val, {
+                caseInsensitive: case_insensitive === "true",
+                matchWhole: match_whole === "true",
+                accentInsensitive: accent_insensitive === "true"
+            })
+        });
+    } else if (Book.pathType(prop) === "Number") {
+        if (val.startsWith(">=")) {
+            val = val.substring(2);
+            
+            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
+            result = callback({ [prop]: { $gte: val } });
+        } else if (val.startsWith("<=")) {
+            val = val.substring(2);
+
+            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
+            result = callback({ [prop]: { $lte: val } });
+        } else if (val.startsWith('>')) {
+            val = val.substring(1);
+
+            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
+            result = callback({ [prop]: { $gt: val } });
+        } else if (val.startsWith('<')) {
+            val = val.substring(1);
+
+            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
+            result = callback({ [prop]: { $lt: val } });
+        } else if (val.startsWith("in_")) {
+            const [min, max] = val.substring(3).split(':');
+
+            if (isNaN(min)) return () => res.status(400).json({message: `Invalid Min Number: ${min}`});
+            if (isNaN(max)) return () => res.status(400).json({message: `Invalid Max Number: ${max}`});
+            result = callback({ [prop]: { $gte: min, $lte: max } });
+        } else if (val.startsWith("nin_")) {
+            const [min, max] = val.substring(4).split(':');
+            result = callback({$or: [{[prop]: {$lt: min}}, {[prop]: {$gt: max}}]});
+        } else {
+            result = callback({ [prop]: val });
+        }
+    }
+
+    return () => result;
+}
+
 createFilterRoutes('all');
+
 createFilterRoutes('by-:prop/:val', (req, res) => {
     let {prop, val} = req.params;
 
@@ -118,62 +169,50 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
         ai = a,
         accent_insensitive = ai
     } = req.query;
-
-    if (prop === 'id') prop = '_id';
-    if (!Book.pathExists(prop)) return () => res.status(400).json({message: `Invalid property: ${prop}`});
     
-    let result;
-    if (Book.pathType(prop) === "String") {
-        result = Book.find({
-            [prop]: transformRegex(val, {
-                caseInsensitive: case_insensitive === "true",
-                matchWhole: match_whole === "true",
-                accentInsensitive: accent_insensitive === "true"
-            })
-        });
-    } else if (Book.pathType(prop) === "Number") {
-        if (val.startsWith(">=")) {
-            val = val.substring(2);
-            
-            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
-            result = Book.find({ [prop]: { $gte: val } });
-        } else if (val.startsWith("<=")) {
-            val = val.substring(2);
-
-            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
-            result = Book.find({ [prop]: { $lte: val } });
-        } else if (val.startsWith('>')) {
-            val = val.substring(1);
-
-            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
-            result = Book.find({ [prop]: { $gt: val } });
-        } else if (val.startsWith('<')) {
-            val = val.substring(1);
-
-            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
-            result = Book.find({ [prop]: { $lt: val } });
-        } else if (val.startsWith("in_")) {
-            const [min, max] = val.substring(3).split(':');
-
-            if (isNaN(min)) return () => res.status(400).json({message: `Invalid Min Number: ${min}`});
-            if (isNaN(max)) return () => res.status(400).json({message: `Invalid Max Number: ${max}`});
-            result = Book.find({ [prop]: { $gte: min, $lte: max } });
-        } else if (val.startsWith("nin_")) {
-            const [min, max] = val.substring(4).split(':');
-            result = Book.find({$or: [{[prop]: {$lt: min}}, {[prop]: {$gt: max}}]});
-        } else {
-            result = Book.find({ [prop]: val });
-        }
-    }
-
-    return () => result;
+    if (prop === 'id') prop = '_id';
+    return byValue(prop, val, req, res, {case_insensitive, match_whole, accent_insensitive});
 });
+
 createFilterRoutes("favorited-by/:userId", async (req) => {
     const userId = req.params.userId;
     const user = await User.findById(userId);
 
     if (!user) return () => res.status(404).json({message: "User not found"});
     return () => Book.find({ _id: { $in: user.favorites.map((id) => id.toString()) } });
+});
+
+createFilterRoutes("favorited-by/:userId/by-:prop/:val", async (req, res) => {
+    let {prop, val} = req.params;
+
+    const {
+        i = "true",
+        ci = i,
+        case_insensitive = ci,
+
+        m = "false",
+        mw = m,
+        match_whole = mw,
+
+        a = "true",
+        ai = a,
+        accent_insensitive = ai
+    } = req.query;
+
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+
+    if (!user) return () => res.status(404).json({message: "User not found"});
+    if (prop === 'id') prop = '_id';
+    if (prop === "_id") return () => res.status(400).json({message: "Cannot filter by _id"});
+
+    return byValue(prop, val, req, res, {
+        case_insensitive,
+        match_whole,
+        accent_insensitive,
+        callback: (obj) => Book.find({ ...obj, _id: { $in: user.favorites.map((id) => id.toString()) } })
+
+    });
 });
 
 //get all distince categories
