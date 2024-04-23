@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Book = require("models/Book");
+const User = require("models/User");
 const { transformRegex } = require("lib/Regex");
 
+
 // Reduce repetitive code by batch-creating similar routes
-function createFilterRoutes(path, _get=() => Book.find({})) {
+function createFilterRoutes(path, _get=() => () => Book.find({})) {
     async function get(req, res) {
         const {
             l = 10,
@@ -18,7 +20,10 @@ function createFilterRoutes(path, _get=() => Book.find({})) {
             sort = s
         } = req.query;
 
-        let result = _get(req, res);
+        // The function will return another function, because if we await directly the whole query will get executed, and
+        // we want to modify the query before that happens.
+        let result = (await _get(req, res))();
+        if (res.headersSent) return;
         const count = await result.clone().countDocuments();
         const maxPage = Math.ceil(count / parseInt(limit));
 
@@ -115,7 +120,7 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
     } = req.query;
 
     if (prop === 'id') prop = '_id';
-    if (!Book.pathExists(prop)) return res.status(400).json({message: `Invalid property: ${prop}`});
+    if (!Book.pathExists(prop)) return () => res.status(400).json({message: `Invalid property: ${prop}`});
     
     let result;
     if (Book.pathType(prop) === "String") {
@@ -130,28 +135,28 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
         if (val.startsWith(">=")) {
             val = val.substring(2);
             
-            if (isNaN(val)) return res.status(400).json({message: `Invalid Number: ${val}`});
+            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
             result = Book.find({ [prop]: { $gte: val } });
         } else if (val.startsWith("<=")) {
             val = val.substring(2);
 
-            if (isNaN(val)) return res.status(400).json({message: `Invalid Number: ${val}`});
+            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
             result = Book.find({ [prop]: { $lte: val } });
         } else if (val.startsWith('>')) {
             val = val.substring(1);
 
-            if (isNaN(val)) return res.status(400).json({message: `Invalid Number: ${val}`});
+            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
             result = Book.find({ [prop]: { $gt: val } });
         } else if (val.startsWith('<')) {
             val = val.substring(1);
 
-            if (isNaN(val)) return res.status(400).json({message: `Invalid Number: ${val}`});
+            if (isNaN(val)) return () => res.status(400).json({message: `Invalid Number: ${val}`});
             result = Book.find({ [prop]: { $lt: val } });
         } else if (val.startsWith("in_")) {
             const [min, max] = val.substring(3).split(':');
 
-            if (isNaN(min)) return res.status(400).json({message: `Invalid Min Number: ${min}`});
-            if (isNaN(max)) return res.status(400).json({message: `Invalid Max Number: ${max}`});
+            if (isNaN(min)) return () => res.status(400).json({message: `Invalid Min Number: ${min}`});
+            if (isNaN(max)) return () => res.status(400).json({message: `Invalid Max Number: ${max}`});
             result = Book.find({ [prop]: { $gte: min, $lte: max } });
         } else if (val.startsWith("nin_")) {
             const [min, max] = val.substring(4).split(':');
@@ -161,7 +166,14 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
         }
     }
 
-    return result;
+    return () => result;
+});
+createFilterRoutes("favorited-by/:userId", async (req) => {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+
+    if (!user) return () => res.status(404).json({message: "User not found"});
+    return () => Book.find({ _id: { $in: user.favorites.map((id) => id.toString()) } });
 });
 
 //get all distince categories

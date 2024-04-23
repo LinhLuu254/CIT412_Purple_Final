@@ -16,21 +16,17 @@ router.get('/all', async (req, res) => {
         include_books = ib
     } = req.query;
 
-    const users = (await User.find()).map(user => user.toJSON());
-
-    // Do not return with the password hash
-    users.forEach(user => delete user.password);
-
-    if (include_books === "true") {
-        for (let i = 0; i < users.length; i++) {
-            for (let j = 0; j < users[i].favorites.length; j++) {
-                const book = await Book.findById(users[i].favorites[j]);
-                users[i].favorites[j] = book.toJSON();
-            }
-        }
-    }
-
-    res.json(users);
+    const query = include_books ? User.find().populate("favorites") : User.find();
+    query.then((users) => {
+        res.json(users.map(user => {
+            user = user.toJSON();
+            delete user.password;
+            return user;
+        }));
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).json(err);
+    });
 });
 
 router.get("/one/:id", async (req, res) => {
@@ -41,19 +37,19 @@ router.get("/one/:id", async (req, res) => {
         include_books = ib
     } = req.query;
 
-    const user = (await User.findById(req.params.id)).toJSON();
+    const query = include_books ? User.findById(req.params.id).populate("favorites") : User.findById(req.params.id);
+    query.then((user) => {
+        if (!user) res.status(404).json({message: "User not found"});
+        user = user.toJSON();
 
-    // Do not return with the password hash
-    delete user.password;
+        // Do not return with the password hash
+        delete user.password;
 
-    if (include_books === "true") {
-       for (let i = 0; i < user.favorites.length; i++) {
-            const book = await Book.findById(user.favorites[i]);
-            user.favorites[i] = book.toJSON();
-       }
-    }
-
-    res.json(user);
+        res.json(user);
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).json(err);
+    });
 });
 
 router.patch("/one/:id", async (req, res) => {
