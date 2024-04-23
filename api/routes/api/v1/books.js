@@ -174,7 +174,7 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
     return byValue(prop, val, res, {case_insensitive, match_whole, accent_insensitive});
 });
 
-createFilterRoutes("favorited-by/:userId", async (req) => {
+createFilterRoutes("favorited-by/:userId/all", async (req) => {
     const userId = req.params.userId;
     const user = await User.findById(userId);
 

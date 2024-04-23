@@ -4,28 +4,23 @@ import useID from 'src/hooks/useID';
 import { useState, useEffect, useContext, useCallback} from "react";
 import axios from 'axios';
 import { APIURLContext } from "src/contexts/APIURLContext";
-import Books from 'src/components/Book/Book';
+import BookGallery from 'src/components/BookGallery/BookGallery';
 
 
 export default function ProfilePage() {
     const { token} = useToken();
-
     const {_id} = useID();
-
     const apiURL = useContext(APIURLContext);
-
     const [user, setUser] = useState({});
 
     // const apiURL = useContext(APIURLContext);
 
     const loadUser = useCallback(async () => {
         try {
-            const response = await axios.get(`${apiURL}/users/one/${_id}?i=true`);
-            setUser(response.data)
-
+            const response = await axios.get(`${apiURL}/users/one/${_id}`);
+            setUser(response.data);
         }catch (error){
             console.error(error);
-
         }
     }, [_id, apiURL]);
 
@@ -49,31 +44,13 @@ export default function ProfilePage() {
     //console.log(`ID: ${_id}`);
 
     return(
-        <div>
-            <div>
-                <h2>User's Info</h2>
-                <p>Username: {user.name}</p>
-                <p>Useremail: {user.email}</p>
+        <div className="container-sm mx-auto p-3">
+            <h2>User's Info</h2>
+            <p>Username: {user.name}</p>
+            <p>Useremail: {user.email}</p>
 
-                <h2>Favorite Books</h2>
-                <div className="row">
-                    {
-                        user?.favorites?.map((book) =>
-                            <Books
-                                key={book._id}
-                                book={book}
-                                bookID={book._id}
-                                bookTitle={book.title}
-                                bookCategory={book.categories}
-                                bookThumbnail={book.thumbnail} 
-                                bookRating={book.average_rating}
-                                favorite={true}
-                                refreshFavorites={loadUser}
-                            />
-                        )
-                    }
-                </div>
-            </div>
+            <h2>Favorite Books</h2>
+            <BookGallery path={`books/favorited-by/${_id}`} reloadOnFavoriteChange={true} />
         </div>
     )
 }

@@ -16,7 +16,7 @@ router.get('/all', async (req, res) => {
         include_books = ib
     } = req.query;
 
-    const query = include_books ? User.find().populate("favorites") : User.find();
+    const query = (include_books === "true") ? User.find().populate("favorites") : User.find();
     query.then((users) => {
         res.json(users.map(user => {
             user = user.toJSON();
@@ -37,7 +37,7 @@ router.get("/one/:id", async (req, res) => {
         include_books = ib
     } = req.query;
 
-    const query = include_books ? User.findById(req.params.id).populate("favorites") : User.findById(req.params.id);
+    const query = (include_books === "true") ? User.findById(req.params.id).populate("favorites") : User.findById(req.params.id);
     query.then((user) => {
         if (!user) res.status(404).json({message: "User not found"});
         user = user.toJSON();

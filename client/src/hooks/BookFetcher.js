@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 function filterString(type, value) {
@@ -40,35 +40,35 @@ function useBookFetcher ({
     const [accentInsensitive, setAccentInsensitive] = useState(initAccentInsensitive);
     const [matchWhole, setMatchWhole] = useState(initMatchWhole);
 
-    useEffect(() => {
-        // Define a function that loads tasks from the API
-        const loadBooks = async () => {
-            const dataSource = 
-                `${path}/${filterString(filter, query)}/props/${fields.join(",")}?`
-                + `p=${page}&`
-                + `l=${limit}&`
-                + `s=${sort}&`
-                + `i=${caseInsensitive}&`
-                + `m=${matchWhole}&`
-                + `a=${accentInsensitive}`
-            ;
+    // Define a function that loads tasks from the API
+    const loadBooks = useCallback(async () => {
+        const dataSource = 
+            `${path}/${filterString(filter, query)}/props/${fields.join(",")}?`
+            + `p=${page}&`
+            + `l=${limit}&`
+            + `s=${sort}&`
+            + `i=${caseInsensitive}&`
+            + `m=${matchWhole}&`
+            + `a=${accentInsensitive}`
+        ;
 
-            try {
-                setLoading(true);
-                const response = await axios.get(dataSource);
-                response.data.books = descending ? response.data.books.reverse() : response.data.books;
-                //console.log(response.data);
-                setData({...response.data});
-                setLoading(false);
-            } catch (err) {
-                setLoading(false);
-                setError(err.message);
-                console.error(err);
-            }
-        };
-        
+        try {
+            setLoading(true);
+            const response = await axios.get(dataSource);
+            response.data.books = descending ? response.data.books.reverse() : response.data.books;
+            //console.log(response.data);
+            setData({...response.data});
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            setError(err.message);
+            console.error(err);
+        }
+    }, [path, filter, query, page, limit, fields, sort, descending, caseInsensitive, matchWhole, accentInsensitive]);
+
+    useEffect(() => {
         loadBooks();
-    }, [path, filter, query, fields, page, limit, sort, descending, caseInsensitive, matchWhole, accentInsensitive]);
+    }, [loadBooks]);
 
     return {
         loading, error, data,
@@ -80,10 +80,8 @@ function useBookFetcher ({
 
         filter, query, page, limit, fields, sort,
         caseInsensitive, accentInsensitive, matchWhole,
-        descending
+        descending, loadBooks
     };
-
-
 }
 
 export default useBookFetcher;
