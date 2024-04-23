@@ -1,0 +1,643 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Final",
+    "description": "Documentation of Final API"
+  },
+  "host": "localhost:8080",
+  "basePath": "/api/v1",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Root route. Use it to check if the API is running.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+
+    "/books/all": {
+      "get": {
+        "description": "Get all data associated with all books.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "l",
+            "description": "Alias for limit",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "Limit the number of results per page. Default is 10.",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "p",
+            "description": "Alias for page",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "pg",
+            "description": "Alias for page",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Page number to get. Default is 1.",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "s",
+            "description": "Alias for sort",
+            "required": false,
+            "type": "string"
+          },
+
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Sort the results by a property. Default is null, so Mongo decides the order.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/books/all/props/{fields}": {
+      "get": {
+        "description": "Get data associated with all books, but only the specified fields.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "l",
+            "description": "Alias for limit",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "Limit the number of results per page. Default is 10.",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "p",
+            "description": "Alias for page",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "pg",
+            "description": "Alias for page",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Page number to get. Default is 1.",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "s",
+            "description": "Alias for sort",
+            "required": false,
+            "type": "string"
+          },
+
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Sort the results by a property. Default is null, so Mongo decides the order.",
+            "required": false,
+            "type": "string"
+          },
+
+          {
+            "name": "fields",
+            "in": "path",
+            "description": "Fields to be returned, separated by commas",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          },
+
+          "400": {
+            "description": "One of the field names does not exist in the book schema. Detail in the response."
+          }
+        }
+      }
+    },
+
+    "/books/by-{prop}/{val}": {
+      "get": {
+        "description": "Get all data associated with the books that have a {prop} comparable to {val}. The specifics of this comparison can be fine-tuned qith query args.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "l",
+            "description": "Alias for limit",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "Limit the number of results per page. Default is 10.",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "p",
+            "description": "Alias for page",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "pg",
+            "description": "Alias for page",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Page number to get. Default is 1.",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "s",
+            "description": "Alias for sort",
+            "required": false,
+            "type": "string"
+          },
+
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Sort the results by a property. Default is null, so Mongo decides the order.",
+            "required": false,
+            "type": "string"
+          },
+
+          {
+            "name": "prop",
+            "in": "path",
+            "description": "Property to be compared",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "val",
+            "in": "path",
+            "description": "Value to be compared. If the comparison type is equality, nothing else is necessary. You can precede the value with '<', '>', '<=', or '>=' to specify a different comparison type. You can also specify a range by preceding with 'in_' ('nin_' to negate) and separating the values with ':'",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "i",
+            "in": "query",
+            "description": "Alias for case_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "ci",
+            "in": "query",
+            "description": "Alias for case_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "case_insensitive",
+            "description": "Ignore case for the comparison. Default is true.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "m",
+            "in": "query",
+            "description": "Alias for match_whole",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "mw",
+            "in": "query",
+            "description": "Alias for match_whole",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "match_whole",
+            "description": "Match the entire string for the comparison. Default is false.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "a",
+            "in": "query",
+            "description": "Alias for accent_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "ai",
+            "in": "query",
+            "description": "Alias for accent_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "accent_insensitive",
+            "description": "Ignore accents for the comparison. Default is true.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          },
+
+          "400": {
+            "description": "Either the prop name does not exist in the books schema or the value is expected to be a number, but is not. Detail in response."
+          }
+        }
+      }
+    },
+
+    "/books/by-{prop}/{val}/props/{fields}": {
+      "get": {
+        "description": "Get data associated with the books that have a {prop} comparable to {val}, but only the specified fields. The specifics of this comparison can be fine-tuned qith query args.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "l",
+            "description": "Alias for limit",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "Limit the number of results per page. Default is 10.",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "p",
+            "description": "Alias for page",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "pg",
+            "description": "Alias for page",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Page number to get. Default is 1.",
+            "required": false,
+            "type": "integer"
+          },
+
+          {
+            "in": "query",
+            "name": "s",
+            "description": "Alias for sort",
+            "required": false,
+            "type": "string"
+          },
+
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Sort the results by a property. Default is null, so Mongo decides the order.",
+            "required": false,
+            "type": "string"
+          },
+          
+          {
+            "name": "prop",
+            "in": "path",
+            "description": "Property to be compared",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "val",
+            "in": "path",
+            "description": "Value to be compared. If the comparison type is equality, nothing else is necessary. You can precede the value with '<', '>', '<=', or '>=' to specify a different comparison type. You can also specify a range by preceding with 'in_' ('nin_' to negate) and separating the values with ':'",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "fields",
+            "in": "path",
+            "description": "Fields to be returned, separated by commas",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "i",
+            "in": "query",
+            "description": "Alias for case_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "ci",
+            "in": "query",
+            "description": "Alias for case_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "case_insensitive",
+            "description": "Ignore case for the comparison. Default is true.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "m",
+            "in": "query",
+            "description": "Alias for match_whole",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "mw",
+            "in": "query",
+            "description": "Alias for match_whole",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "match_whole",
+            "description": "Match the entire string for the comparison. Default is false.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "a",
+            "in": "query",
+            "description": "Alias for accent_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "ai",
+            "in": "query",
+            "description": "Alias for accent_insensitive",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "accent_insensitive",
+            "description": "Ignore accents for the comparison. Default is true.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          },
+
+          "400": {
+            "description": "Either the prop name does not exist in the books schema or the value is expected to be a number, but is not. Detail in response."
+          }
+        }
+      }
+    },
+
+    "/users/all": {
+      "get": {
+        "description": "Get all data associated with all users.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "i",
+            "description": "Alias for include_books",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "in": "query",
+            "name": "b",
+            "description": "Alias for include_books",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "in": "query",
+            "name": "include_books",
+            "description": "Include the full book details associated with the user's favorites instead of just the book IDs. Default is false.",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+
+    "/users/one/{id}": {
+      "get": {
+        "description": "Get all data associated with the user with the specified ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "in": "query",
+            "name": "i",
+            "description": "Alias for include_books",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "in": "query",
+            "name": "b",
+            "description": "Alias for include_books",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "in": "query",
+            "name": "include_books",
+            "description": "Include the full book details associated with the user's favorites instead of just the book IDs. Default is false.",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+
+      "patch": {
+        "description": "Update the user with the specified ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "type": "string"
+          },
+          
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User object with the fields to be updated",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  }
+}

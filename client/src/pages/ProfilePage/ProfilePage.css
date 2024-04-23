@@ -1,0 +1,12 @@
+#profile {
+    background-image: url('../../assets/images/Book4.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+#profile h3, h2 {
+    color: rgb(240, 232, 221);
+    font-family: cursive;
+
+}

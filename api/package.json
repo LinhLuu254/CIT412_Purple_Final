@@ -1,0 +1,30 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www",
+    "swagger-autogen": "echo \"This Will Override Current Configuration (Ctrl+C within 10 seconds to cancel)\";sleep 10s;node services/swagger.js"
+  },
+  "dependencies": {
+    "@google-cloud/pubsub": "^4.3.3",
+    "@grpc/grpc-js": "^1.10.6",
+    "app-module-path": "^2.2.0",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
+    "express": "~4.16.1",
+    "express-rate-limit": "^7.2.0",
+    "mongoose": "^8.3.0",
+    "morgan": "~1.9.1",
+    "nodemon": "^3.1.0",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.0"
+  }
+}
