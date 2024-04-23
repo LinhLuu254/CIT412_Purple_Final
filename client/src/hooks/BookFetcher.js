@@ -17,7 +17,7 @@ function useBookFetcher ({
     query: initQuery = "",
     page: initPage = 0,
     limit: initLimit = 10,
-    fields: initFields = ["title", "id", "thumbnail", "categories", "average_rating"],
+    fields: initFields = ["title", "id", "thumbnail", "categories", "average_rating","description", "authors"],
     sort: initSort = null,
     descending: initDescending = false,
     caseInsensitive: initCaseInsensitive = true,

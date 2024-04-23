@@ -21,10 +21,6 @@ export default function useFavoriteToggler({
     }={}) => {
         if (!token || !userId) {
             setLoading(false);
-
-            // const err = new Error("Not Logged In");
-            // setError(err.message);
-            // onError(err);
             return;
         }
 

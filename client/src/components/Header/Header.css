@@ -1,16 +1,15 @@
 .Header-wrapper {
-    background-color: rgb(75, 71, 18);
+    background-color: rgb(196, 191, 126);
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: large;
-    color: white;
 }
 
 .Header-wrapper a:hover {
-    color: rgb(224, 211, 136);
+    color: rgb(247, 238, 187);
 }
 
 .Header-wrapper h1 {
@@ -18,16 +17,12 @@
     pointer-events: none;
 }
 
+
 .Header-link {
-    color: rgb(252, 252, 252);
+    color: rgb(36, 28, 28);
     padding-left: 10px;
     text-decoration: none;
+    font-weight: bold;
 }
 
-.navbar-brand{
-    color: white;
-}
 
-a {
-    color: bisque;
-}

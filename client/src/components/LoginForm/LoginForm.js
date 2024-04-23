@@ -4,6 +4,7 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import useToken from "src/hooks/useToken";
 import axios from "axios";
 import useID from "src/hooks/useID";
+import 'src/components/LoginForm/LoginForm.css'
 
 
 export default function LoginForm() {
@@ -13,6 +14,8 @@ export default function LoginForm() {
     const { token, setToken } = useToken();
     const {_id, setID} = useID();
     const navigate = useNavigate();
+
+    console.log(`User's id: ${_id}`)
 
     if (token) {
         return <Navigate replace to='/profile' />
@@ -71,11 +74,11 @@ export default function LoginForm() {
     }
 
     return (      
-        <div className="container-sm m-auto align-items-center mt-5" >
-            <div className="row">
+        <div className="container-sm align-items-center mt-3">
+            <div className="row p-2" id="form">
                 <div className="col-sm-4 text-black">
                     <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
-                        <form method="post" onSubmit={handleSubmit}>
+                        <form method="post" onSubmit={handleSubmit} id="login-form">
                             <h3 className="mb-3 pb-3" >Log in</h3>
                             <div className="form-outline mb-4">
                                 <label className="form-label" htmlFor="email">Email address
@@ -103,9 +106,8 @@ export default function LoginForm() {
                                 </label>
                             </div>
                             <div className="pt-1 mb-4">
-                                <button className="btn btn-info btn-lg btn-block" type="submit" value="Log In">Login</button>
+                                <button className="button-29 " type="submit" value="Log In">Login</button>
                             </div>
-                            <p className="small mb-5 pb-lg-2"><a className="text-muted" href="#!">Forgot password?</a></p>
                             <p>Don't have an account? <a href="/register" className="link-info">Register here</a></p>
                         </form>
                     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import 'src/components/RegisterForm/RegisterForm.css'
 import { APIURLContext } from 'src/contexts/APIURLContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -53,62 +54,65 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className='container-sm align-items-center m-3' id="register">
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-            <label htmlFor="Name">Name</label>
+      <div className="container-lg align-items-center" id="register" >
+        <form onSubmit={handleSubmit}>
+          <h2>Registration</h2>
+          <p><i>Please fill out this form to register!</i></p>
+          <div className="form-group">
+              <label htmlFor="Name"><b>Name</b></label>
+              <input 
+                type="name" 
+                name="name"
+                className="form-control" 
+                id="InputName" 
+                aria-describedby="name" 
+                placeholder="Enter your full name" 
+                value={formData.name}
+                onChange={handleChange}
+              />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email"><b>Email address</b></label>
             <input 
-              type="name" 
-              name="name"
+              type="email" 
+              name="email"
               className="form-control" 
-              id="InputName" 
-              aria-describedby="name" 
-              placeholder="Enter your full name" 
-              value={formData.name}
+              id="InputEmail1" 
+              aria-describedby="email" 
+              placeholder="Enter email" 
+              value={formData.email}
+              onChange={handleChange} 
+              />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password"><b>Password</b></label>
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              id="InputPassword"
+              placeholder="Password"
+              value={formData.password}
               onChange={handleChange}
             />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email address</label>
-          <input 
-            type="email" 
-            name="email"
-            className="form-control" 
-            id="InputEmail1" 
-            aria-describedby="email" 
-            placeholder="Enter email" 
-            value={formData.email}
-            onChange={handleChange} 
+          </div>
+          <div className="form-group">
+            <label htmlFor="phone"><b>Phone</b></label>
+            <input
+              type="phone"
+              name="phone"
+              className="form-control"
+              id="InputPhone"
+              placeholder="Enter your phone number"
+              value={formData.phone}
+              onChange={handleChange}
             />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            className="form-control"
-            id="InputPassword"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="phone">Phone</label>
-          <input
-            type="phone"
-            name="phone"
-            className="form-control"
-            id="InputPhone"
-            placeholder="Enter your phone number"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </div>
-          <br></br>
-          <button type="submit" className="btn btn-primary">Register</button>
-      </form>
-    </div>
+          </div>
+            <br></br>
+            <button type="submit" className="btn btn-success" id="button-33">Register</button>
+        </form>
+       
+      </div>
   )
 }
 export default RegisterForm;

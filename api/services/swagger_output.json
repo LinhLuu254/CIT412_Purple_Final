@@ -105,14 +105,6 @@
         "description": "Get data associated with all books, but only the specified fields.",
         "parameters": [
           {
-            "name": "fields",
-            "in": "path",
-            "description": "Fields to be returned, separated by commas",
-            "required": true,
-            "type": "string"
-          },
-
-          {
             "in": "query",
             "name": "l",
             "description": "Alias for limit",
@@ -165,6 +157,14 @@
             "name": "sort",
             "description": "Sort the results by a property. Default is null, so Mongo decides the order.",
             "required": false,
+            "type": "string"
+          },
+
+          {
+            "name": "fields",
+            "in": "path",
+            "description": "Fields to be returned, separated by commas",
+            "required": true,
             "type": "string"
           }
         ],
@@ -189,22 +189,6 @@
         "description": "Get all data associated with the books that have a {prop} comparable to {val}. The specifics of this comparison can be fine-tuned qith query args.",
         "parameters": [
           {
-            "name": "prop",
-            "in": "path",
-            "description": "Property to be compared",
-            "required": true,
-            "type": "string"
-          },
-
-          {
-            "name": "val",
-            "in": "path",
-            "description": "Value to be compared. If the comparison type is equality, nothing else is necessary. You can precede the value with '<', '>', '<=', or '>=' to specify a different comparison type. You can also specify a range by preceding with 'in_' ('nin_' to negate) and separating the values with ':'",
-            "required": true,
-            "type": "string"
-          },
-
-          {
             "in": "query",
             "name": "l",
             "description": "Alias for limit",
@@ -257,6 +241,22 @@
             "name": "sort",
             "description": "Sort the results by a property. Default is null, so Mongo decides the order.",
             "required": false,
+            "type": "string"
+          },
+
+          {
+            "name": "prop",
+            "in": "path",
+            "description": "Property to be compared",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "val",
+            "in": "path",
+            "description": "Value to be compared. If the comparison type is equality, nothing else is necessary. You can precede the value with '<', '>', '<=', or '>=' to specify a different comparison type. You can also specify a range by preceding with 'in_' ('nin_' to negate) and separating the values with ':'",
+            "required": true,
             "type": "string"
           },
 
@@ -353,30 +353,6 @@
         "description": "Get data associated with the books that have a {prop} comparable to {val}, but only the specified fields. The specifics of this comparison can be fine-tuned qith query args.",
         "parameters": [
           {
-            "name": "prop",
-            "in": "path",
-            "description": "Property to be compared",
-            "required": true,
-            "type": "string"
-          },
-
-          {
-            "name": "val",
-            "in": "path",
-            "description": "Value to be compared. If the comparison type is equality, nothing else is necessary. You can precede the value with '<', '>', '<=', or '>=' to specify a different comparison type. You can also specify a range by preceding with 'in_' ('nin_' to negate) and separating the values with ':'",
-            "required": true,
-            "type": "string"
-          },
-
-          {
-            "name": "fields",
-            "in": "path",
-            "description": "Fields to be returned, separated by commas",
-            "required": true,
-            "type": "string"
-          },
-          
-          {
             "in": "query",
             "name": "l",
             "description": "Alias for limit",
@@ -429,6 +405,30 @@
             "name": "sort",
             "description": "Sort the results by a property. Default is null, so Mongo decides the order.",
             "required": false,
+            "type": "string"
+          },
+          
+          {
+            "name": "prop",
+            "in": "path",
+            "description": "Property to be compared",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "val",
+            "in": "path",
+            "description": "Value to be compared. If the comparison type is equality, nothing else is necessary. You can precede the value with '<', '>', '<=', or '>=' to specify a different comparison type. You can also specify a range by preceding with 'in_' ('nin_' to negate) and separating the values with ':'",
+            "required": true,
+            "type": "string"
+          },
+
+          {
+            "name": "fields",
+            "in": "path",
+            "description": "Fields to be returned, separated by commas",
+            "required": true,
             "type": "string"
           },
 
@@ -515,186 +515,6 @@
 
           "400": {
             "description": "Either the prop name does not exist in the books schema or the value is expected to be a number, but is not. Detail in response."
-          }
-        }
-      }
-    },
-
-    "/books/favorited-by/{userId}/all": {
-      "get": {
-        "description": "Get all data associated with all books that are favorited by the user with the specified ID.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "description": "ID of the user",
-            "required": true,
-            "type": "string"
-          },
-
-          {
-            "in": "query",
-            "name": "l",
-            "description": "Alias for limit",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "limit",
-            "description": "Limit the number of results per page. Default is 10.",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "p",
-            "description": "Alias for page",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "pg",
-            "description": "Alias for page",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "page",
-            "description": "Page number to get. Default is 1.",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "s",
-            "description": "Alias for sort",
-            "required": false,
-            "type": "string"
-          },
-
-          {
-            "in": "query",
-            "name": "sort",
-            "description": "Sort the results by a property. Default is null, so Mongo decides the order.",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-
-          "404": {
-            "description": "User not found"
-          },
-
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-
-    "/books/favorited-by/{userId}/all/props/{fields}": {
-      "get": {
-        "description": "Get data associated with all books that are favorited by the user with the specified ID, but only the specified fields.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "description": "ID of the user",
-            "required": true,
-            "type": "string"
-          },
-
-          {
-            "name": "fields",
-            "in": "path",
-            "description": "Fields to be returned, separated by commas",
-            "required": true,
-            "type": "string"
-          },
-
-          {
-            "in": "query",
-            "name": "l",
-            "description": "Alias for limit",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "limit",
-            "description": "Limit the number of results per page. Default is 10.",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "p",
-            "description": "Alias for page",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "pg",
-            "description": "Alias for page",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "page",
-            "description": "Page number to get. Default is 1.",
-            "required": false,
-            "type": "integer"
-          },
-
-          {
-            "in": "query",
-            "name": "s",
-            "description": "Alias for sort",
-            "required": false,
-            "type": "string"
-          },
-
-          {
-            "in": "query",
-            "name": "sort",
-            "description": "Sort the results by a property. Default is null, so Mongo decides the order.",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-
-          "404": {
-            "description": "User not found"
-          },
-
-          "500": {
-            "description": "Internal Server Error"
-          },
-
-          "400": {
-            "description": "One of the field names does not exist in the book schema. Detail in the response."
           }
         }
       }

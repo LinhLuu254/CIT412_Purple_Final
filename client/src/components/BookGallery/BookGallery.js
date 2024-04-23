@@ -19,7 +19,7 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
     } = useBookFetcher({
         path: `${apiURL}/${path}`,
         filter: "all",
-        limit: 9
+        limit: 12
     });
 
     const {
@@ -62,77 +62,84 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
 
     if (booksError || favoritesError) return <div className="container-sm mx-auto p-3"><p>Error: {booksError || favoritesError}</p></div>
     return (
-        <>
-            <SearchBar
-                search={onSearch}
-                reset={onReset}
-                text={query}
-                type={filter}
-                caseInsensitive={caseInsensitive}
-                matchWhole={matchWhole}
-                accentInsensitive={accentInsensitive}
-                descending={descending}
-            />
+        <div className="container-lg" id="gallery">
+            <div className="row m-3 p-3" id="search">
+                <SearchBar
+                    search={onSearch}
+                    reset={onReset}
+                    text={query}
+                    type={filter}
+                    caseInsensitive={caseInsensitive}
+                    matchWhole={matchWhole}
+                    accentInsensitive={accentInsensitive}
+                    descending={descending}
+                />
 
-            <p>
-                Showing Page {page + 1} {" "}
-                (books {booksData.startIndex + 1}-{booksData.endIndex})
-                of {booksData.maxPage} pages ({booksData.count} books total)
-            </p>
+                <p id="show-page">
+                    Showing Page {page + 1} {" "}
+                    (books {booksData.startIndex + 1}-{booksData.endIndex})
+                    of {booksData.maxPage} pages ({booksData.count} books total)
+                </p>
 
-            {booksLoading || favoritesLoading ? <p>Loading...</p> : null}
-            <button
-                className="btn-primary me-2"
-                onClick={() => setPage(0)}
-                disabled={page === 0}
-            >
-                First
-            </button>
+                {booksLoading || favoritesLoading ? <p>Loading...</p> : null}
 
-            <button
-                className="btn-primary me-2"
-                onClick={() => setPage((p) => p - 1)}
-                disabled={page === 0}
-            >
-                Previous
-            </button>
-            <button
-                className="btn-primary"
-                onClick={() => setPage((p) => p + 1)}
-                
-                disabled={page === booksData.maxPage - 1}
-            >
-                Next
-            </button>
+                <div className="col ">
+                    <button
+                        className="btn-primary me-2"
+                        onClick={() => setPage(0)}
+                        disabled={page === 0}
+                    >
+                        First
+                    </button>
 
-            <button
-                className="btn-primary ms-2"
-                onClick={() => setPage(booksData.maxPage - 1)}
-                disabled={page === booksData.maxPage - 1}
-            >
-                Last
-            </button>
+                    <button
+                        className="btn-primary me-2"
+                        onClick={() => setPage((p) => p - 1)}
+                        disabled={page === 0}
+                    >
+                        Previous
+                    </button>
+                    <button
+                        className="btn-primary"
+                        onClick={() => setPage((p) => p + 1)}
+                        
+                        disabled={page === booksData.maxPage - 1}
+                    >
+                        Next
+                    </button>
 
-            <div className="row">
-                {
-                    booksData?.books?.map((book) =>(
-                        <Books
-                            key = {book._id}
-                            loading={booksLoading}
-                            error={booksError}
-                            bookID={book._id}
-                            bookTitle={book.title}
-                            bookCategory={book.categories}
-                            bookThumbnail={book.thumbnail} 
-                            bookRating={book.average_rating}
-                            favorite={favorites.includes(book._id)}
-                            refreshFavorites={refreshFavorites}
-                        />
-
-                    ))
-                }
-
+                    <button
+                        className="btn-primary ms-2"
+                        onClick={() => setPage(booksData.maxPage - 1)}
+                        disabled={page === booksData.maxPage - 1}
+                    >
+                        Last
+                    </button>
+                </div>   
             </div>
-        </>
+            <div className="row p-2 m-auto">
+                <div className="row">
+                    {
+                        booksData?.books?.map((book) =>(
+                            <Books
+                                key = {book._id}
+                                loading={booksLoading}
+                                error={booksError}
+                                bookID={book._id}
+                                bookTitle={book.title}
+                                bookCategory={book.categories}
+                                bookThumbnail={book.thumbnail}
+                                bookDescription={book.description} 
+                                bookAuthor={book.authors}
+                                bookRating={book.average_rating}
+                                favorite={favorites.includes(book._id)}
+                                refreshFavorites={refreshFavorites}
+                            />
+
+                        ))
+                    }
+                </div>
+            </div> 
+        </div>
     )
 }

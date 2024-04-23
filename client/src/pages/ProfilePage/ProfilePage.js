@@ -5,6 +5,7 @@ import { useState, useEffect, useContext, useCallback} from "react";
 import axios from 'axios';
 import { APIURLContext } from "src/contexts/APIURLContext";
 import BookGallery from 'src/components/BookGallery/BookGallery';
+import 'src/pages/ProfilePage/ProfilePage.css'
 
 
 export default function ProfilePage() {
@@ -44,13 +45,15 @@ export default function ProfilePage() {
     //console.log(`ID: ${_id}`);
 
     return(
-        <div className="container-sm mx-auto p-3">
-            <h2>User's Info</h2>
-            <p>Username: {user.name}</p>
-            <p>Useremail: {user.email}</p>
-
-            <h2>Favorite Books</h2>
-            <BookGallery path={`books/favorited-by/${_id}`} reloadOnFavoriteChange={true} />
+        <div className="container-lg mx-auto p-3" id="profile">
+            <div className='row'>
+                <h2>Welcome, <i>{user.name}</i> to your book collection! </h2>
+                <h3>Favorite Books</h3>
+                <p>Add more to your collection...</p>
+            </div>
+            <div> 
+                <BookGallery path={`books/favorited-by/${_id}`} reloadOnFavoriteChange={true} />
+            </div>
         </div>
     )
 }

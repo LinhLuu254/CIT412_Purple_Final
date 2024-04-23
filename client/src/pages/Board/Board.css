@@ -1,4 +1,9 @@
-.container-sm {
-    background-color: rgb(255, 255, 255);
+#board {
+    background-color: rgb(236, 230, 214);
     overflow-wrap: normal;
+}
+
+#board h2{
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: rgb(77, 73, 44);
 }
