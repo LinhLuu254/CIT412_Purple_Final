@@ -64,7 +64,9 @@ router.post("/one/:user_id/toggle-favorite/:book_id",
     async (req, res) => {
         if (req.user.id !== req.params.user_id) return res.status(401).json({message: "Unauthorized"});
 
-        const user = (await User.findById(req.params.user_id)).toJSON();
+        const user = (await User.findById(req.params.user_id))?.toJSON();
+        if (!user) return res.status(404).json({message: "User not found"});
+        
         const bookId = req.params.book_id;
         const favorites = user.favorites.map(id => id.toString());
 
