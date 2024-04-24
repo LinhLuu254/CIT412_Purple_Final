@@ -76,10 +76,21 @@ function regexMatchWhole(value, flags = "") {
     }
 }
 
+function regexMatchWord(value, flags = "") {
+    if (typeof value === 'string') {
+        return new RegExp(`\\b${value}\\b`, flags);
+    } else if (value instanceof RegExp) {
+        return regexMatchWord(value.source, combineFlags(value.flags, flags));
+    } else {
+        throw new TypeError("Expected string or RegExp, got " + typeof value);
+    }
+}
+
 function transformRegex(value, args={}) {
     const flags = args.flags || "";
     if (args.accentInsensitive) value = regexAccentInsensitive(value, flags);
     if (args.caseInsensitive) value = regexCaseInsensitive(value, flags);
+    if (args.matchWord) value = regexMatchWord(value, flags);
     if (args.matchWhole) value = regexMatchWhole(value, flags);
     return value;
 }
