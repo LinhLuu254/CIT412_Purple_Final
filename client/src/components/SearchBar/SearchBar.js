@@ -22,6 +22,7 @@ export function SearchBar({
 
     caseInsensitive: initCaseInsensitive = true,
     matchWhole: initMatchWhole = false,
+    matchWord: initMatchWord = false,
     accentInsensitive: initAccentInsensitive = true,
     descending: initDescending = false
 }={}) {
@@ -31,6 +32,7 @@ export function SearchBar({
 
     const [caseInsensitive, setCaseInsensitive] = useState(initCaseInsensitive);
     const [matchWhole, setMatchWhole] = useState(initMatchWhole);
+    const [matchWord, setMatchWord] = useState(initMatchWord);
     const [accentInsensitive, setAccentInsensitive] = useState(initAccentInsensitive);
     const [descending, setDescending] = useState(initDescending);
 
@@ -93,7 +95,7 @@ export function SearchBar({
 
                 <button
                     className="btn-primary me-2"
-                    onClick={() => search({text, type, caseInsensitive, matchWhole, accentInsensitive, descending})}
+                    onClick={() => search({text, type, caseInsensitive, matchWhole, accentInsensitive, descending, matchWord})}
                 >
                     Search
                 </button>
@@ -115,7 +117,18 @@ export function SearchBar({
                         checked={matchWhole}
                         onChange={(e) => setMatchWhole(e.target.checked)}
                     />
-                    <label className="form-check-label" htmlFor="matchWhole">Match Whole</label>
+                    <label className="form-check-label" htmlFor="matchWhole">Match Whole String</label>
+                </div>
+
+                <div className="form-check form-switch">
+                    <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="matchWord"
+                        checked={matchWord}
+                        onChange={(e) => setMatchWord(e.target.checked)}
+                    />
+                    <label className="form-check-label" htmlFor="matchWord">Match Whole Word</label>
                 </div>
 
                 <div className="form-check form-switch">

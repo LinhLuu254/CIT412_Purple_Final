@@ -22,7 +22,8 @@ function useBookFetcher ({
     descending: initDescending = false,
     caseInsensitive: initCaseInsensitive = true,
     accentInsensitive: initAccentInsensitive = true,
-    matchWhole: initMatchWhole = false
+    matchWhole: initMatchWhole = false,
+    matchWord: initMatchWord = false
 }={}) {
     // Set up initial state of state variables
     const [data, setData] = useState({});
@@ -39,6 +40,7 @@ function useBookFetcher ({
     const [caseInsensitive, setCaseInsensitive] = useState(initCaseInsensitive);
     const [accentInsensitive, setAccentInsensitive] = useState(initAccentInsensitive);
     const [matchWhole, setMatchWhole] = useState(initMatchWhole);
+    const [matchWord, setMatchWord] = useState(initMatchWord);
 
     // Define a function that loads tasks from the API
     const loadBooks = useCallback(async () => {
@@ -48,7 +50,8 @@ function useBookFetcher ({
             + `l=${limit}&`
             + `s=${sort}&`
             + `i=${caseInsensitive}&`
-            + `m=${matchWhole}&`
+            + `W=${matchWhole}&`
+            + `w=${matchWord}&`
             + `a=${accentInsensitive}`
         ;
 
@@ -64,7 +67,7 @@ function useBookFetcher ({
             setError(err.message);
             console.error(err);
         }
-    }, [path, filter, query, page, limit, fields, sort, descending, caseInsensitive, matchWhole, accentInsensitive]);
+    }, [path, filter, query, page, limit, fields, sort, descending, caseInsensitive, matchWhole, accentInsensitive, matchWord]);
 
     useEffect(() => {
         loadBooks();
@@ -77,10 +80,11 @@ function useBookFetcher ({
         setLimit, setFields, setSort,
         setCaseInsensitive, setAccentInsensitive,
         setMatchWhole, setDescending,
+        setMatchWord,
 
         filter, query, page, limit, fields, sort,
         caseInsensitive, accentInsensitive, matchWhole,
-        descending, loadBooks
+        descending, matchWord, loadBooks
     };
 }
 

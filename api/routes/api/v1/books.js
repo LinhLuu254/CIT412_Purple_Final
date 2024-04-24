@@ -100,7 +100,7 @@ function createFilterRoutes(path, _get=() => () => Book.find({})) {
     });
 }
 
-function byValue(prop, val, res, {case_insensitive, match_whole, accent_insensitive, callback=(obj) => Book.find(obj)}) {
+function byValue(prop, val, res, {case_insensitive, match_whole, accent_insensitive, match_word, callback=(obj) => Book.find(obj)}) {
     if (!Book.pathExists(prop)) return () => res.status(400).json({message: `Invalid property: ${prop}`});
 
     let result;
@@ -109,7 +109,8 @@ function byValue(prop, val, res, {case_insensitive, match_whole, accent_insensit
             [prop]: transformRegex(val, {
                 caseInsensitive: case_insensitive === "true",
                 matchWhole: match_whole === "true",
-                accentInsensitive: accent_insensitive === "true"
+                accentInsensitive: accent_insensitive === "true",
+                matchWord: match_word === "true"
             })
         });
     } else if (Book.pathType(prop) === "Number") {
@@ -161,9 +162,13 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
         ci = i,
         case_insensitive = ci,
 
-        m = "false",
-        mw = m,
-        match_whole = mw,
+        W = "false",
+        mW = W,
+        match_whole = mW,
+
+        w = "false",
+        mw = w,
+        match_word = mw,
 
         a = "true",
         ai = a,
@@ -171,7 +176,7 @@ createFilterRoutes('by-:prop/:val', (req, res) => {
     } = req.query;
     
     if (prop === 'id') prop = '_id';
-    return byValue(prop, val, res, {case_insensitive, match_whole, accent_insensitive});
+    return byValue(prop, val, res, {case_insensitive, match_whole, accent_insensitive, match_word });
 });
 
 createFilterRoutes("favorited-by/:userId/all", async (req) => {
@@ -190,9 +195,13 @@ createFilterRoutes("favorited-by/:userId/by-:prop/:val", async (req, res) => {
         ci = i,
         case_insensitive = ci,
 
-        m = "false",
-        mw = m,
-        match_whole = mw,
+        W = "false",
+        mW = W,
+        match_whole = mW,
+
+        w = "false",
+        mw = w,
+        match_word = mw,
 
         a = "true",
         ai = a,
@@ -210,6 +219,7 @@ createFilterRoutes("favorited-by/:userId/by-:prop/:val", async (req, res) => {
         case_insensitive,
         match_whole,
         accent_insensitive,
+        match_word,
         callback: (obj) => Book.find({ ...obj, _id: { $in: user.favorites.map((id) => id.toString()) } })
     });
 });

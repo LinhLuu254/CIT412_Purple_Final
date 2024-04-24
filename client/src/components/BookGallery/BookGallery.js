@@ -15,6 +15,7 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
         setCaseInsensitive, caseInsensitive,
         setAccentInsensitive, accentInsensitive,
         setDescending, descending,
+        matchWord, setMatchWord,
         loadBooks
     } = useBookFetcher({
         path: `${apiURL}/${path}`,
@@ -36,17 +37,18 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
         if (userId) loadFavorites();
     }
 
-    const onSearch = useCallback(({text, type, matchWhole, caseInsensitive, accentInsensitive, descending}) => {
+    const onSearch = useCallback(({text, type, matchWhole, matchWord, caseInsensitive, accentInsensitive, descending}) => {
         if (!booksLoading) {
             setQuery(text);
             setFilter(type);
             setPage(0);
             setMatchWhole(matchWhole);
+            setMatchWord(matchWord);
             setCaseInsensitive(caseInsensitive);
             setAccentInsensitive(accentInsensitive);
             setDescending(descending);
         }
-    }, [booksLoading, setQuery, setFilter, setPage, setMatchWhole, setCaseInsensitive, setAccentInsensitive, setDescending]);
+    }, [booksLoading, setQuery, setFilter, setPage, setMatchWhole, setCaseInsensitive, setAccentInsensitive, setDescending, setMatchWord]);
 
     const onReset = useCallback(() => {
         if (!booksLoading) {
@@ -54,11 +56,12 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
             setFilter("all");
             setPage(0);
             setMatchWhole(false);
+            setMatchWord(false);
             setCaseInsensitive(true);
             setAccentInsensitive(true);
             setDescending(false);
         }
-    }, [booksLoading, setQuery, setFilter, setPage, setMatchWhole, setCaseInsensitive, setAccentInsensitive, setDescending]);
+    }, [booksLoading, setQuery, setFilter, setPage, setMatchWhole, setCaseInsensitive, setAccentInsensitive, setDescending, setMatchWord]);
 
     if (booksError || favoritesError) return <div className="container-sm mx-auto p-3"><p>Error: {booksError || favoritesError}</p></div>
     return (
@@ -71,6 +74,7 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
                     type={filter}
                     caseInsensitive={caseInsensitive}
                     matchWhole={matchWhole}
+                    matchWord={matchWord}
                     accentInsensitive={accentInsensitive}
                     descending={descending}
                 />

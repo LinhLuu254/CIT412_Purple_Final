@@ -285,7 +285,31 @@
           },
 
           {
-            "name": "m",
+            "name": "w",
+            "in": "query",
+            "description": "Alias for match_word",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "mw",
+            "in": "query",
+            "description": "Alias for match_word",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "match_word",
+            "description": "Match entire words for the comparison. Default is false.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "W",
             "in": "query",
             "description": "Alias for match_whole",
             "required": false,
@@ -293,7 +317,7 @@
           },
 
           {
-            "name": "mw",
+            "name": "mW",
             "in": "query",
             "description": "Alias for match_whole",
             "required": false,
@@ -457,7 +481,7 @@
           },
 
           {
-            "name": "m",
+            "name": "W",
             "in": "query",
             "description": "Alias for match_whole",
             "required": false,
@@ -465,7 +489,7 @@
           },
 
           {
-            "name": "mw",
+            "name": "mW",
             "in": "query",
             "description": "Alias for match_whole",
             "required": false,
@@ -475,6 +499,30 @@
           {
             "name": "match_whole",
             "description": "Match the entire string for the comparison. Default is false.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "w",
+            "in": "query",
+            "description": "Alias for match_word",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "mw",
+            "in": "query",
+            "description": "Alias for match_word",
+            "required": false,
+            "type": "boolean"
+          },
+
+          {
+            "name": "match_word",
+            "description": "Match entire words for the comparison. Default is false.",
             "in": "query",
             "required": false,
             "type": "boolean"
