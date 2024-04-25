@@ -8,7 +8,7 @@ const { transformRegex } = require("lib/Regex");
 // Reduce repetitive code by batch-creating similar routes
 function createFilterRoutes(path, _get=() => () => Book.find({})) {
     async function get(req, res) {
-        const {
+        let {
             l = 10,
             limit = l,
 
@@ -24,7 +24,10 @@ function createFilterRoutes(path, _get=() => () => Book.find({})) {
         // we want to modify the query before that happens.
         let result = (await _get(req, res))();
         if (res.headersSent) return;
+
         const count = await result.clone().countDocuments();
+        if (limit === "null") limit = count;
+
         const maxPage = Math.ceil(count / parseInt(limit));
 
         if (parseInt(page) >= maxPage || parseInt(page) < 0) return res.status(404).json({message: "Page out of bounds"});
@@ -33,7 +36,7 @@ function createFilterRoutes(path, _get=() => () => Book.find({})) {
         const endIndex = Math.min(startIndex + parseInt(limit), count);
 
         if (s !== "null") result = result.sort({ [sort]: 1 });
-        if (limit !== "null") result = result.limit(parseInt(limit)).skip(startIndex);
+        result = result.limit(parseInt(limit)).skip(startIndex);
         
         return {query: result, page: parseInt(page), maxPage, limit: parseInt(limit), sort, count, startIndex, endIndex};
     }
