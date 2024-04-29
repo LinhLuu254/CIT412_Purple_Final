@@ -13,6 +13,11 @@ function Books({ bookID, bookTitle, bookCategory, bookThumbnail, bookRating, boo
         bookID
     });
 
+    if (toggleError === "Unauthorized") {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('_id');
+    }
+
     return (
         <div className="col-md-4">
             <div className="card" id="bookCard">

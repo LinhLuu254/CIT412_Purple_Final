@@ -67,7 +67,13 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
         }
     }, [booksLoading, setQuery, setFilter, setPage, setMatchWhole, setCaseInsensitive, setAccentInsensitive, setDescending, setMatchWord, setSort]);
 
-    if (booksError || favoritesError) return <div className="container-sm mx-auto p-3"><p>Error: {booksError || favoritesError}</p></div>
+    if (booksError || favoritesError) {
+        if ((booksError || favoritesError) === "Unauthorized") {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('_id');
+        }
+        return <div className="container-sm mx-auto p-3"><p>Error: {booksError || favoritesError}</p></div>
+    }
     return (
         <div className="container-lg" id="gallery">
             <div className="row m-3 p-3" id="search">
