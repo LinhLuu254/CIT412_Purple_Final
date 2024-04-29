@@ -3,8 +3,6 @@ import {Link as RouterLink } from 'react-router-dom';
 import LogoutButton from '../LogoutButton/Logout';
 
 function Header() {
-
-
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-light Header-wrapper">
@@ -21,18 +19,21 @@ function Header() {
                             <li className='nav-item'>
                                 <RouterLink to='/profile' className='Header-link'>Profile</RouterLink>
                             </li>
-                            <li className='nav-item'>
-                                <RouterLink to='/register' className='Header-link'>Register</RouterLink>
-                            </li>
-                            <li className="nav-item">
                             {localStorage.getItem('accessToken') ? (
                                 <LogoutButton />
                             ) : (
-                                <RouterLink to='/login' className='Header-link'>
-                                    Login
-                                </RouterLink>
+                                <>
+                                    <li className='nav-item'>
+                                        <RouterLink to='/register' className='Header-link'>Register</RouterLink>
+                                    </li>
+
+                                    <li className='nav-item'>
+                                        <RouterLink to='/login' className='Header-link'>
+                                            Login
+                                        </RouterLink>
+                                    </li>
+                                </>
                             )}
-                            </li>   
                         </ul>
                     </div>
                 </div>

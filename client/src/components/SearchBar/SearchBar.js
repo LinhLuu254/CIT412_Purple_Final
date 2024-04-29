@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react"
+import Switch from "src/components/Switch/Switch";
 
 const numberTypes = [
     "isbn13",
@@ -20,6 +21,7 @@ export function SearchBar({
     search = () => {},
     reset = () => {},
 
+    sort: initSort = "null",
     caseInsensitive: initCaseInsensitive = true,
     matchWhole: initMatchWhole = false,
     matchWord: initMatchWord = false,
@@ -30,6 +32,7 @@ export function SearchBar({
     const [type, _setType] = useState(initType);
     const [number, setNumber] = useState(numberTypes.includes(type));
 
+    const [sort, setSort] = useState(initSort);
     const [caseInsensitive, setCaseInsensitive] = useState(initCaseInsensitive);
     const [matchWhole, setMatchWhole] = useState(initMatchWhole);
     const [matchWord, setMatchWord] = useState(initMatchWord);
@@ -93,9 +96,28 @@ export function SearchBar({
                     <option value="max_average_rating">Max Average Rating</option>
                 </select>
 
+                <select
+                    className="form-select"
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                >
+                    <option value="null">(No Sort)</option>
+                    <option value="title">Sort by Title</option>
+                    <option value="subtitle">Sort by Subtitle</option>
+                    <option value="description">Sort by Description</option>
+                    <option value="authors">Sort by Author</option>
+                    <option value="categories">Sort by Category</option>
+                    <option value="isbn10">Sort by ISBN10</option>
+                    <option value="isbn13">Sort by ISBN13</option>
+                    <option value="num_pages">Sort by Number of Pages</option>
+                    <option value="published_year">Sort by Published Year</option>
+                    <option value="ratings_count">Sort by Ratings Count</option>
+                    <option value="average_rating">Sort by Average Rating</option>
+                </select>
+
                 <button
                     className="btn-primary me-2"
-                    onClick={() => search({text, type, caseInsensitive, matchWhole, accentInsensitive, descending, matchWord})}
+                    onClick={() => search({text, type, caseInsensitive, matchWhole, accentInsensitive, descending, matchWord, sort})}
                 >
                     Search
                 </button>
@@ -109,60 +131,44 @@ export function SearchBar({
             </div>
 
             <div className="d-flex flex-row gap-2">
-                <div className="form-check form-switch">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="matchWhole"
-                        checked={matchWhole}
-                        onChange={(e) => setMatchWhole(e.target.checked)}
-                    />
-                    <label className="form-check-label" htmlFor="matchWhole">Match Whole String</label>
-                </div>
+                <Switch
+                    id="matchWhole"
+                    label="Match Whole String"
+                    checked={matchWhole}
+                    onChange={setMatchWhole}
+                />
 
-                <div className="form-check form-switch">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="matchWord"
-                        checked={matchWord}
-                        onChange={(e) => setMatchWord(e.target.checked)}
-                    />
-                    <label className="form-check-label" htmlFor="matchWord">Match Whole Word</label>
-                </div>
+                <Switch
+                    id="matchWord"
+                    label="Match Whole Word"
+                    checked={matchWord}
+                    onChange={setMatchWord}
+                />
 
-                <div className="form-check form-switch">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="caseInsensitive"
-                        checked={!caseInsensitive}
-                        onChange={(e) => setCaseInsensitive(!e.target.checked)}
-                    />
-                    <label className="form-check-label" htmlFor="caseInsensitive">Case Sensitive</label>
-                </div>
+                <Switch
+                    id="caseSensitive"
+                    label="Case Sensitive"
+                    checked={!caseInsensitive}
+                    onChange={setCaseInsensitive}
 
-                <div className="form-check form-switch">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="accentInsensitive"
-                        checked={!accentInsensitive}
-                        onChange={(e) => setAccentInsensitive(!e.target.checked)}
-                    />
-                    <label className="form-check-label" htmlFor="accentInsensitive">Accent Sensitive</label>
-                </div>
+                    invert
+                />
 
-                <div className="form-check form-switch">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="descending"
-                        checked={descending}
-                        onChange={(e) => setDescending(e.target.checked)}
-                    />
-                    <label className="form-check-label" htmlFor="descending">Descending</label>
-                </div>
+                <Switch
+                    id="accentSensitive"
+                    label="Accent Sensitive"
+                    checked={!accentInsensitive}
+                    onChange={setAccentInsensitive}
+
+                    invert
+                />
+
+                <Switch
+                    id="descending"
+                    label="Descending"
+                    checked={descending}
+                    onChange={setDescending}
+                />
             </div>
         </div>
     )

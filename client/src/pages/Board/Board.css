@@ -7,3 +7,7 @@
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     color: rgb(77, 73, 44);
 }
+
+#board .form-switch label {
+    color: black;
+}

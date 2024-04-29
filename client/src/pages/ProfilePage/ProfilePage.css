@@ -10,3 +10,7 @@
     font-family: cursive;
 
 }
+
+#profile .form-switch label {
+    color: white;
+}
