@@ -6,10 +6,10 @@ This is a Google Cloud Function triggered by a PubSub message to the topic `emai
 ## Deployment Command
 **Ensure you have an active Google Cloud Project**
 ```
-gcloud functions deploy send_email_welcome \
---entry-point sendWelcome \
+gcloud functions deploy sendFavoriteBooksEmail \
+--entry-point sendFavoriteBooksEmail \
 --runtime nodejs18 \
---trigger-topic=email_signup \
+--trigger-topic=User_Favorite_Data \
 --no-gen2
 
 ```
