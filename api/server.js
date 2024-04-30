@@ -47,7 +47,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile, {explorer: true}));
-app.use(cors());
+if (process.env.NODE_ENV === 'production') {
+  app.use(cors( {
+    origin: "https://cit412-purple-final.uc.r.appspot.com"
+  }));
+} else {
+  app.use(cors());
+}
 app.use(limiter);
 
 //Add router to middleware
