@@ -1,7 +1,7 @@
 {
-  "name": "welcome_email_google",
+  "name": "send_favorite_book",
   "version": "1.0.0",
-  "description": "GCF to email a new user",
+  "description": "send users their book collection",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

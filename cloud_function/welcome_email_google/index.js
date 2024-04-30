@@ -10,15 +10,23 @@ exports.sendWelcome = (message, context) => {
   const incomingMessage = Buffer.from(message.data, 'base64').toString('utf-8');
   const user = JSON.parse(incomingMessage);
 
+  const userName = user.user_name
+
   console.log(`New user registered: ${user.email_address}`);
+  console.log(`New user name: ${userName}`);
 
   // Email message setup
   const email = {
     to: user.email_address, // User's email address
     from: process.env.SENDGRID_SENDER, // Verified SendGrid sender email
-    subject: "Welcome to our platform!",
+    subject: "Welcome to Book Finder!",
     text: "We're thrilled to have you on board and can't wait to get started.",
-    html: "<strong>We're thrilled to have you on board and can't wait to get started.</strong>",
+    html: 
+        `<div>
+        <h2>Hi, ${userName}!</h2>
+        <p>Welcome to <strong>Book Finder</strong>! Embark on a journey through the vast realm of literature with us. Let's uncover hidden gems, explore timeless classics, and 
+        dive into thrilling adventures between the pages. Whether you're seeking knowledge, inspiration, or pure escapism, our platform is your guide to discovering the perfect book for every mood and moment. Get ready to immerse yourself in the enchanting world of stories!</p>
+        </div>`,
   };
 
   // Send the email
