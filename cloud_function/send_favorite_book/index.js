@@ -20,7 +20,7 @@ exports.sendFavoriteBooksEmail = async (message, context) => {
        const email = {
            to: favoriteBooksData.email,
            from: process.env.SENDGRID_SENDER,
-           subject: "Your Favorite Books",
+           subject: "Your Favorite Books from Book Finder",
            text: `Here are your favorite books:\n${favoriteBooksData.titles.join('\n')}`,
            html: `<p>Here are your favorite books:</p><ul>${favoriteBooksData.titles.map(book => `<li>${book}</li>`).join('')}</ul>`,
        };

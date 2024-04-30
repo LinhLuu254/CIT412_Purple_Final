@@ -23,9 +23,12 @@ exports.sendWelcome = (message, context) => {
     text: "We're thrilled to have you on board and can't wait to get started.",
     html: 
         `<div>
-        <h2>Hi, ${userName}!</h2>
-        <p>Welcome to <strong>Book Finder</strong>! Embark on a journey through the vast realm of literature with us. Let's uncover hidden gems, explore timeless classics, and 
+        <h2>Hi <i>${userName}</i>,</h2>
+        <p>Welcome to <strong>Book Finder</strong>!</p>
+        <p>Embark on a journey through the vast realm of literature with us. Let's uncover hidden gems, explore timeless classics, and 
         dive into thrilling adventures between the pages. Whether you're seeking knowledge, inspiration, or pure escapism, our platform is your guide to discovering the perfect book for every mood and moment. Get ready to immerse yourself in the enchanting world of stories!</p>
+        <br>
+        <strong>Book Finder</strong>
         </div>`,
   };
 

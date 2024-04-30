@@ -9,7 +9,7 @@ This is a Google Cloud Function triggered by a PubSub message to the topic `emai
 gcloud functions deploy sendFavoriteBooksEmail \
 --entry-point sendFavoriteBooksEmail \
 --runtime nodejs18 \
---trigger-topic=User_Favorite_Data \
+--trigger-topic User_Favorite_Data \
 --no-gen2
 
 ```
