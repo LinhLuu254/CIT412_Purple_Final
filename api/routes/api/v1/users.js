@@ -7,6 +7,41 @@ const User = require("models/User");
 const Book = require("models/Book");
 const {PubSub} = require('@google-cloud/pubsub');
 
+router.post('/share', async (req, res) => {
+
+    const pubSubClient = new PubSub();
+
+    const Useremail = req.body.email;
+
+    const userData = JSON.stringify({
+        email: Useremail,
+        titles: req.body.books.map(book => book.title)
+        // images: req.body.books.map(book => book.thumbnail)
+    });
+    
+    //console.log(userData);
+
+    async function publishMessage(data){
+
+        const dataBuffer = Buffer.from(data);
+
+        try {
+            const messageId = await pubSubClient
+            .topic('User_Favorite_Data')
+            .publishMessage({data: dataBuffer});
+            console.log(`Messgae ${messageId} published.`);
+        } catch (error) {
+            console.error(`Received error while publishing: ${error.message}`);
+            process.exitCode = 1;
+        }
+    }
+
+    publishMessage(userData);
+
+    res.status(200).json({
+        message: 'Message Sent'
+    });
+});
 
 router.get('/all', async (req, res) => {
     const {

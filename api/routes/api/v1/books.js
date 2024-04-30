@@ -30,7 +30,7 @@ function createFilterRoutes(path, _get=() => () => Book.find({})) {
 
         const maxPage = Math.ceil(count / parseInt(limit));
 
-        if (parseInt(page) >= maxPage || parseInt(page) < 0) return res.status(404).json({message: "Page out of bounds"});
+        if (maxPage !== 0 && (parseInt(page) >= maxPage || parseInt(page) < 0)) return res.status(404).json({message: "Page out of bounds"});
 
         const startIndex = parseInt(page) * parseInt(limit);
         const endIndex = Math.min(startIndex + parseInt(limit), count);

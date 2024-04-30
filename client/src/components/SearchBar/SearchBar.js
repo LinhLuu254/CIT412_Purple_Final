@@ -18,8 +18,7 @@ const numberTypes = [
 export function SearchBar({
     type: initType = "title",
     text: initText = "",
-    search = () => {},
-    reset = () => {},
+    search: _search = () => {},
 
     sort: initSort = "null",
     caseInsensitive: initCaseInsensitive = true,
@@ -51,6 +50,32 @@ export function SearchBar({
         if (numberTypes.includes(type)) _setText(text.replace(/[^0-9]/g, ""));
         setNumber(numberTypes.includes(type));
     }, [text]);
+
+    function search() {
+        _search({text, type, caseInsensitive, matchWhole, accentInsensitive, descending, matchWord, sort});
+    }
+
+    function reset() {
+        _setText(initText);
+        _setType(initType);
+        setSort(initSort);
+        setCaseInsensitive(initCaseInsensitive);
+        setMatchWhole(initMatchWhole);
+        setMatchWord(initMatchWord);
+        setAccentInsensitive(initAccentInsensitive);
+        setDescending(initDescending);
+
+        _search({
+            text: initText,
+            type: initType,
+            caseInsensitive: initCaseInsensitive,
+            matchWhole: initMatchWhole,
+            accentInsensitive: initAccentInsensitive,
+            descending: initDescending,
+            matchWord: initMatchWord,
+            sort: initSort
+        });
+    }
 
     return (
         <div className="mb-3">
@@ -117,7 +142,7 @@ export function SearchBar({
 
                 <button
                     className="btn-primary me-2"
-                    onClick={() => search({text, type, caseInsensitive, matchWhole, accentInsensitive, descending, matchWord, sort})}
+                    onClick={search}
                 >
                     Search
                 </button>

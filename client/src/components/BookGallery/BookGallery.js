@@ -5,18 +5,14 @@ import Books from "src/components/Book/Book";
 import { SearchBar } from "src/components/SearchBar/SearchBar";
 import useFavoritesFetcher from "src/hooks/FavoritesFetcher";
 
-export default function BookGallery({path = "books", reloadOnFavoriteChange=false}={}) {
+export default function BookGallery({path = "books", reloadOnFavoriteChange=false, email}={}) {
     const apiURL = useContext(APIURLContext);
 
     const {
         loading: booksLoading, error: booksError, data: booksData,
-        setQuery, query, setFilter, filter, page, setPage,
-        setMatchWhole, matchWhole,
-        setCaseInsensitive, caseInsensitive,
-        setAccentInsensitive, accentInsensitive,
-        setDescending, descending,
-        matchWord, setMatchWord,
-        sort, setSort,
+        setQuery, setFilter, page, setPage,
+        setMatchWhole, setCaseInsensitive, setAccentInsensitive,
+        setDescending, setMatchWord, setSort,
         loadBooks
     } = useBookFetcher({
         path: `${apiURL}/${path}`,
@@ -53,20 +49,6 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
         }
     }, [booksLoading, setQuery, setFilter, setPage, setMatchWhole, setCaseInsensitive, setAccentInsensitive, setDescending, setMatchWord, setSort]);
 
-    const onReset = useCallback(() => {
-        if (!booksLoading) {
-            setQuery("");
-            setFilter("all");
-            setPage(0);
-            setMatchWhole(false);
-            setMatchWord(false);
-            setCaseInsensitive(true);
-            setAccentInsensitive(true);
-            setDescending(false);
-            setSort("null");
-        }
-    }, [booksLoading, setQuery, setFilter, setPage, setMatchWhole, setCaseInsensitive, setAccentInsensitive, setDescending, setMatchWord, setSort]);
-
     if (booksError || favoritesError) {
         if ((booksError || favoritesError) === "Unauthorized") {
             localStorage.removeItem('accessToken');
@@ -74,20 +56,46 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
         }
         return <div className="container-sm mx-auto p-3"><p>Error: {booksError || favoritesError}</p></div>
     }
+
+    const sendPubSubData = async () => {
+
+        booksData.email = email;
+
+        try{
+            const response = await fetch(`${apiURL}/users/share`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },                
+                body: JSON.stringify(booksData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Error sending data to API');
+            }
+
+            console.log('Data sent successfully!');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <div className="container-lg" id="gallery">
+            <button onClick={sendPubSubData} >Share your favs</button>
             <div className="row m-3 p-3" id="search">
                 <SearchBar
                     search={onSearch}
-                    reset={onReset}
-                    text={query}
-                    type={filter}
-                    caseInsensitive={caseInsensitive}
-                    matchWhole={matchWhole}
-                    matchWord={matchWord}
-                    sort={sort}
-                    accentInsensitive={accentInsensitive}
-                    descending={descending}
+                    text=""
+                    type="all"
+                    sort="null"
+                    
+                    caseInsensitive
+                    accentInsensitive
+
+                    matchWhole={false}
+                    matchWord={false}
+                    descending={false}
                 />
 
                 <p id="show-page">

@@ -1,17 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Switch({
     id,
     label,
-    checked: initChecked = false,
+    checked: _checked = false,
     invert = false,
     onChange: _onChange = () => {}
 }={}) {
-    const [checked, setChecked] = useState(initChecked);
+    const [checked, setChecked] = useState(_checked);
     const onChange = (e) => {
         setChecked(e.target.checked);
         _onChange(invert ? !e.target.checked : e.target.checked);
     }
+
+    useEffect(() => {
+        setChecked(_checked);
+    }, [_checked]);
 
     return (
         <div className="form-check form-switch">

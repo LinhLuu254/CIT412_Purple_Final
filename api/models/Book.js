@@ -4,7 +4,10 @@ const Schema = mongoose.Schema;
 
 const importantWordOverrides = {
     "big": true,
-    "red": true
+    "red": true,
+    "one": true,
+    "two": true,
+    "gap": true,
 };
 function toTitleCase(str="") {
     const words = str.split(" ");

@@ -52,7 +52,7 @@ export default function ProfilePage() {
                 <p>Add more to your collection...</p>
             </div>
             <div> 
-                <BookGallery path={`books/favorited-by/${_id}`} reloadOnFavoriteChange={true} />
+                <BookGallery path={`books/favorited-by/${_id}`} reloadOnFavoriteChange={true} email={user.email} />
             </div>
         </div>
     )
