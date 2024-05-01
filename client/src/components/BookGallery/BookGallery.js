@@ -4,9 +4,11 @@ import { APIURLContext } from 'src/contexts/APIURLContext';
 import Books from "src/components/Book/Book";
 import { SearchBar } from "src/components/SearchBar/SearchBar";
 import useFavoritesFetcher from "src/hooks/FavoritesFetcher";
+import useToken from "src/hooks/useToken";
 
 export default function BookGallery({path = "books", reloadOnFavoriteChange=false, email}={}) {
     const apiURL = useContext(APIURLContext);
+    const {token} = useToken();
 
     const {
         loading: booksLoading, error: booksError, data: booksData,
@@ -82,7 +84,7 @@ export default function BookGallery({path = "books", reloadOnFavoriteChange=fals
 
     return (
         <div className="container-lg" id="gallery">
-            <button onClick={sendPubSubData} >Share your favs</button>
+            {token ? <button onClick={sendPubSubData} >Share your favs</button> : null}
             <div className="row m-3 p-3" id="search">
                 <SearchBar
                     search={onSearch}
